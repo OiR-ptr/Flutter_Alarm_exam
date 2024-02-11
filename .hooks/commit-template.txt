@@ -1,0 +1,12 @@
+
+# ==== Commit Messages(Template) ====
+# <Prefix> <Emoji> #<Issue Number> <Title>
+# Ex > :sparkles: feat: #777 ログイン機能を実装
+
+# ==== Prefix Emoji ====
+# :sparkles: feat: 機能の追加や変更
+# :memo: docs: ドキュメントの更新
+# :bug: fix: バグ修正
+# :recycle: refactor: リファクタリング
+# :green_heart: test: テストコードの追加や修正
+# :gear: chore: ビルドツールの導入や依存関係を更新など
