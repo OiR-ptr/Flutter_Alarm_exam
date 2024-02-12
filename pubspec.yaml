@@ -7,9 +7,11 @@ environment:
   sdk: '>=3.2.6 <4.0.0'
 
 dependencies:
+  alarm: ^3.0.8
   flutter:
     sdk: flutter
   
+  permission_handler: ^11.2.1
   provider: ^6.0.0
 
 
