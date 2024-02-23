@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:alarm/alarm.dart';
+import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:alarming/scenes/edit_alarm.dart';
 import 'package:alarming/scenes/ring.dart';
 import 'package:alarming/scenes/shortcut_button.dart';
 import 'package:alarming/widgets/tile.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class ExampleAlarmHomeScreen extends StatefulWidget {
   const ExampleAlarmHomeScreen({Key? key}) : super(key: key);
@@ -16,26 +16,24 @@ class ExampleAlarmHomeScreen extends StatefulWidget {
 }
 
 class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
-  late List<AlarmSettings> alarms;
+  late List<MyAlarmSettings> alarms;
 
   static StreamSubscription<AlarmSettings>? subscription;
 
   @override
   void initState() {
     super.initState();
-    if (Alarm.android) {
-      checkAndroidNotificationPermission();
-    }
-    loadAlarms();
-    subscription ??= Alarm.ringStream.stream.listen(
+    subscription ??= MyAlarm.onInitState(
       (alarmSettings) => navigateToRingScreen(alarmSettings),
     );
+    loadAlarms();
   }
 
   void loadAlarms() {
     setState(() {
-      alarms = Alarm.getAlarms();
-      alarms.sort((a, b) => a.dateTime.isBefore(b.dateTime) ? 0 : 1);
+      alarms = MyAlarm.restoreAlarms();
+      alarms.sort(
+          (a, b) => a.settings.dateTime.isBefore(b.settings.dateTime) ? 0 : 1);
     });
   }
 
@@ -66,28 +64,6 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
     if (res != null && res == true) loadAlarms();
   }
 
-  Future<void> checkAndroidNotificationPermission() async {
-    final status = await Permission.notification.status;
-    if (status.isDenied) {
-      alarmPrint('Requesting notification permission...');
-      final res = await Permission.notification.request();
-      alarmPrint(
-        'Notification permission ${res.isGranted ? '' : 'not'} granted.',
-      );
-    }
-  }
-
-  Future<void> checkAndroidExternalStoragePermission() async {
-    final status = await Permission.storage.status;
-    if (status.isDenied) {
-      alarmPrint('Requesting external storage permission...');
-      final res = await Permission.storage.request();
-      alarmPrint(
-        'External storage permission ${res.isGranted ? '' : 'not'} granted.',
-      );
-    }
-  }
-
   @override
   void dispose() {
     subscription?.cancel();
@@ -105,14 +81,14 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
                 separatorBuilder: (context, index) => const Divider(height: 1),
                 itemBuilder: (context, index) {
                   return ExampleAlarmTile(
-                    key: Key(alarms[index].id.toString()),
+                    key: Key(alarms[index].settings.id.toString()),
                     title: TimeOfDay(
-                      hour: alarms[index].dateTime.hour,
-                      minute: alarms[index].dateTime.minute,
+                      hour: alarms[index].settings.dateTime.hour,
+                      minute: alarms[index].settings.dateTime.minute,
                     ).format(context),
-                    onPressed: () => navigateToAlarmScreen(alarms[index]),
+                    onPressed: () => navigateToAlarmScreen(alarms[index].settings),
                     onDismissed: () {
-                      Alarm.stop(alarms[index].id).then((_) => loadAlarms());
+                      Alarm.stop(alarms[index].settings.id).then((_) => loadAlarms());
                     },
                   );
                 },

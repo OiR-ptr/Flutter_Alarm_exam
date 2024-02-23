@@ -2,17 +2,21 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AlarmExpandConfig {
+class AlarmExtensionSettings {
   final int id;
 
-  AlarmExpandConfig({required this.id});
+  AlarmExtensionSettings({required this.id});
 
-  factory AlarmExpandConfig.fromJson(Map<String, dynamic> json) =>
-      AlarmExpandConfig(id: json['id'] as int);
+  factory AlarmExtensionSettings.fromJson(Map<String, dynamic> json) =>
+      AlarmExtensionSettings(id: json['id'] as int);
 
   Map<String, dynamic> toJson() => {
         'id': id,
       };
+
+  static Future<void> init() async {
+    await AlarmExpandConfigStorage.init();
+  }
 }
 
 class AlarmExpandConfigStorage {
@@ -24,17 +28,17 @@ class AlarmExpandConfigStorage {
     prefs = await SharedPreferences.getInstance();
   }
 
-  static Future<void> saveConfig(AlarmExpandConfig config) =>
+  static Future<void> saveConfig(AlarmExtensionSettings config) =>
       prefs.setString('$prefix${config.id}', jsonEncode(config));
 
-  static List<AlarmExpandConfig> getSavedConfig() {
-    final configs = <AlarmExpandConfig>[];
+  static List<AlarmExtensionSettings> getSavedConfig() {
+    final configs = <AlarmExtensionSettings>[];
     final keys = prefs.getKeys();
 
     for (final key in keys) {
       if (key.startsWith(prefix)) {
         final res = prefs.getString(key);
-        configs.add(AlarmExpandConfig.fromJson(jsonDecode(res!)));
+        configs.add(AlarmExtensionSettings.fromJson(jsonDecode(res!)));
       }
     }
 
