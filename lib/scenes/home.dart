@@ -23,9 +23,11 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
   @override
   void initState() {
     super.initState();
-    subscription ??= MyAlarm.onInitState(
-      (alarmSettings) => navigateToRingScreen(alarmSettings),
-    );
+    subscription ??= MyAlarm.onInitState((alarmSettings) {
+      navigateToRingScreen(
+        alarms.firstWhere((alarm) => alarm.id == alarmSettings.id),
+      );
+    });
     loadAlarms();
   }
 
@@ -37,7 +39,7 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
     });
   }
 
-  Future<void> navigateToRingScreen(AlarmSettings alarmSettings) async {
+  Future<void> navigateToRingScreen(MyAlarmSettings alarmSettings) async {
     await Navigator.push(
         context,
         MaterialPageRoute(
@@ -88,8 +90,7 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
                     ).format(context),
                     onPressed: () => navigateToAlarmScreen(alarms[index]),
                     onDismissed: () {
-                      Alarm.stop(alarms[index].settings.id)
-                          .then((_) => loadAlarms());
+                      MyAlarm.stop(alarms[index].id).then((_) => loadAlarms());
                     },
                   );
                 },

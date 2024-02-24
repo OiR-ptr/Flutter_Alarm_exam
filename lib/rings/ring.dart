@@ -1,8 +1,8 @@
-import 'package:alarm/alarm.dart';
+import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
 
 class ExampleAlarmRingScreen extends StatelessWidget {
-  final AlarmSettings alarmSettings;
+  final MyAlarmSettings alarmSettings;
 
   const ExampleAlarmRingScreen({Key? key, required this.alarmSettings})
       : super(key: key);
@@ -25,8 +25,8 @@ class ExampleAlarmRingScreen extends StatelessWidget {
                 RawMaterialButton(
                   onPressed: () {
                     final now = DateTime.now();
-                    Alarm.set(
-                      alarmSettings: alarmSettings.copyWith(
+                    MyAlarm.set(
+                      settings: alarmSettings.copyWith(
                         dateTime: DateTime(
                           now.year,
                           now.month,
@@ -46,7 +46,7 @@ class ExampleAlarmRingScreen extends StatelessWidget {
                 ),
                 RawMaterialButton(
                   onPressed: () {
-                    Alarm.stop(alarmSettings.id)
+                    MyAlarm.stop(alarmSettings.id)
                         .then((_) => Navigator.pop(context));
                   },
                   child: Text(

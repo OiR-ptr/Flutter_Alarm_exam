@@ -14,7 +14,8 @@ class MyAlarm {
       myAlarms.add(MyAlarmSettings(
           id: alarm.id,
           settings: alarm,
-          extensionSettings: exAlarms.firstWhere((element) => element.id == alarm.id)));
+          extensionSettings:
+              exAlarms.firstWhere((element) => element.id == alarm.id)));
     }
 
     return myAlarms;
@@ -44,9 +45,8 @@ class MyAlarm {
     return Alarm.ringStream.stream.listen(onData);
   }
 
-  static Future<bool> set(
-      {required MyAlarmSettings settings}) async {
-    if(await Alarm.set(alarmSettings: settings.settings)) {
+  static Future<bool> set({required MyAlarmSettings settings}) async {
+    if (await Alarm.set(alarmSettings: settings.settings)) {
       AlarmExpandConfigStorage.saveConfig(settings.extensionSettings);
       return true;
     }
@@ -87,4 +87,38 @@ class MyAlarmSettings {
     required this.settings,
     required this.extensionSettings,
   });
+
+  MyAlarmSettings copyWith({
+    int? id,
+    DateTime? dateTime,
+    String? assetAudioPath,
+    bool? loopAudio,
+    bool? vibrate,
+    double? volume,
+    double? fadeDuration,
+    String? notificationTitle,
+    String? notificationBody,
+    bool? enableNotificationOnKill,
+    bool? androidFullScreenIntent,
+  }) {
+    return MyAlarmSettings(
+      id: id ?? this.id,
+      settings: settings.copyWith(
+        id: id,
+        dateTime: dateTime,
+        assetAudioPath: assetAudioPath,
+        loopAudio: loopAudio,
+        vibrate: vibrate,
+        volume: volume,
+        fadeDuration: fadeDuration,
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+        enableNotificationOnKill: enableNotificationOnKill,
+        androidFullScreenIntent: androidFullScreenIntent,
+      ),
+      extensionSettings: extensionSettings.copyWith(
+        id: id,
+      ),
+    );
+  }
 }

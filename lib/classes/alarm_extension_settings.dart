@@ -7,6 +7,14 @@ class AlarmExtensionSettings {
 
   AlarmExtensionSettings({required this.id});
 
+  AlarmExtensionSettings copyWith({
+    int? id,
+  }) {
+    return AlarmExtensionSettings(
+      id: id ?? this.id,
+    );
+  }
+
   factory AlarmExtensionSettings.fromJson(Map<String, dynamic> json) =>
       AlarmExtensionSettings(id: json['id'] as int);
 
@@ -52,5 +60,4 @@ class AlarmExpandConfigStorage {
 
     return configs;
   }
-
 }

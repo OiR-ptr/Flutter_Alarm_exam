@@ -100,7 +100,8 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       notificationBody: 'Your alarm ($id) is ringing',
     );
     final exSettings = AlarmExtensionSettings(id: id);
-    return MyAlarmSettings(id: id, settings: alarmSettings, extensionSettings: exSettings);
+    return MyAlarmSettings(
+        id: id, settings: alarmSettings, extensionSettings: exSettings);
   }
 
   void saveAlarm() {
@@ -108,7 +109,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
     setState(() => loading = true);
 
     MyAlarm.set(settings: buildAlarmSettings()).then((res) {
-      if(res) Navigator.pop(context, true);
+      if (res) Navigator.pop(context, true);
       setState(() {
         loading = false;
       });
@@ -116,7 +117,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
   }
 
   void deleteAlarm() {
-    Alarm.stop(widget.alarmSettings!.id).then((res) {
+    MyAlarm.stop(widget.alarmSettings!.id).then((res) {
       if (res) Navigator.pop(context, true);
     });
   }
