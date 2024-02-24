@@ -10,9 +10,11 @@ class AlarmExtensionSettings {
   factory AlarmExtensionSettings.fromJson(Map<String, dynamic> json) =>
       AlarmExtensionSettings(id: json['id'] as int);
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+    };
+  }
 
   static Future<void> init() async {
     await AlarmExpandConfigStorage.init();
@@ -31,6 +33,12 @@ class AlarmExpandConfigStorage {
   static Future<void> saveConfig(AlarmExtensionSettings config) =>
       prefs.setString('$prefix${config.id}', jsonEncode(config));
 
+  static Future<void> removeConfig(int id) => prefs.remove("$prefix$id");
+
+  static Future<void> removeConfigAll() async {
+    await prefs.clear();
+  }
+
   static List<AlarmExtensionSettings> getSavedConfig() {
     final configs = <AlarmExtensionSettings>[];
     final keys = prefs.getKeys();
@@ -44,4 +52,5 @@ class AlarmExpandConfigStorage {
 
     return configs;
   }
+
 }

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:alarm/alarm.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:alarming/scenes/edit_alarm.dart';
-import 'package:alarming/scenes/ring.dart';
+import 'package:alarming/rings/ring.dart';
 import 'package:alarming/scenes/shortcut_button.dart';
 import 'package:alarming/widgets/tile.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +47,7 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
     loadAlarms();
   }
 
-  Future<void> navigateToAlarmScreen(AlarmSettings? settings) async {
+  Future<void> navigateToAlarmScreen(MyAlarmSettings? settings) async {
     final res = await showModalBottomSheet<bool?>(
         context: context,
         isScrollControlled: true,
@@ -86,9 +86,10 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
                       hour: alarms[index].settings.dateTime.hour,
                       minute: alarms[index].settings.dateTime.minute,
                     ).format(context),
-                    onPressed: () => navigateToAlarmScreen(alarms[index].settings),
+                    onPressed: () => navigateToAlarmScreen(alarms[index]),
                     onDismissed: () {
-                      Alarm.stop(alarms[index].settings.id).then((_) => loadAlarms());
+                      Alarm.stop(alarms[index].settings.id)
+                          .then((_) => loadAlarms());
                     },
                   );
                 },

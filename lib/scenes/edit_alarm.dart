@@ -1,8 +1,10 @@
 import 'package:alarm/alarm.dart';
+import 'package:alarming/classes/alarm_extension_settings.dart';
+import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
 
 class ExampleAlarmEditScreen extends StatefulWidget {
-  final AlarmSettings? alarmSettings;
+  final MyAlarmSettings? alarmSettings;
 
   const ExampleAlarmEditScreen({Key? key, this.alarmSettings})
       : super(key: key);
@@ -34,11 +36,11 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       volume = null;
       assetAudio = 'assets/marimba.mp3';
     } else {
-      selectedDateTime = widget.alarmSettings!.dateTime;
-      loopAudio = widget.alarmSettings!.loopAudio;
-      vibrate = widget.alarmSettings!.vibrate;
-      volume = widget.alarmSettings!.volume;
-      assetAudio = widget.alarmSettings!.assetAudioPath;
+      selectedDateTime = widget.alarmSettings!.settings.dateTime;
+      loopAudio = widget.alarmSettings!.settings.loopAudio;
+      vibrate = widget.alarmSettings!.settings.vibrate;
+      volume = widget.alarmSettings!.settings.volume;
+      assetAudio = widget.alarmSettings!.settings.assetAudioPath;
     }
   }
 
@@ -82,7 +84,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
     }
   }
 
-  AlarmSettings buildAlarmSettings() {
+  MyAlarmSettings buildAlarmSettings() {
     final id = creating
         ? DateTime.now().millisecondsSinceEpoch % 10000
         : widget.alarmSettings!.id;
@@ -97,15 +99,19 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       notificationTitle: 'Alarm example',
       notificationBody: 'Your alarm ($id) is ringing',
     );
-    return alarmSettings;
+    final exSettings = AlarmExtensionSettings(id: id);
+    return MyAlarmSettings(id: id, settings: alarmSettings, extensionSettings: exSettings);
   }
 
   void saveAlarm() {
     if (loading) return;
     setState(() => loading = true);
-    Alarm.set(alarmSettings: buildAlarmSettings()).then((res) {
-      if (res) Navigator.pop(context, true);
-      setState(() => loading = false);
+
+    MyAlarm.set(settings: buildAlarmSettings()).then((res) {
+      if(res) Navigator.pop(context, true);
+      setState(() {
+        loading = false;
+      });
     });
   }
 
