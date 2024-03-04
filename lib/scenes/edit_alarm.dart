@@ -22,6 +22,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
   late bool vibrate;
   late double? volume;
   late String assetAudio;
+  late AlarmAction action;
 
   @override
   void initState() {
@@ -35,12 +36,14 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       vibrate = true;
       volume = null;
       assetAudio = 'assets/marimba.mp3';
+      action = AlarmAction.math;
     } else {
       selectedDateTime = widget.alarmSettings!.settings.dateTime;
       loopAudio = widget.alarmSettings!.settings.loopAudio;
       vibrate = widget.alarmSettings!.settings.vibrate;
       volume = widget.alarmSettings!.settings.volume;
       assetAudio = widget.alarmSettings!.settings.assetAudioPath;
+      action = widget.alarmSettings!.extensionSettings.action;
     }
   }
 
@@ -99,7 +102,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       notificationTitle: 'Alarm example',
       notificationBody: 'Your alarm ($id) is ringing',
     );
-    final exSettings = AlarmExtensionSettings(id: id);
+    final exSettings = AlarmExtensionSettings(id: id, action: action);
     return MyAlarmSettings(
         id: id, settings: alarmSettings, extensionSettings: exSettings);
   }
@@ -235,6 +238,25 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                   ),
                 ],
                 onChanged: (value) => setState(() => assetAudio = value!),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Action",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              DropdownButton(
+                value: action,
+                items: const [
+                  DropdownMenuItem<AlarmAction>(
+                    value: AlarmAction.math,
+                    child: Text('Math'),
+                  ),
+                ],
+                onChanged: (value) => setState(() => action = value!),
               ),
             ],
           ),

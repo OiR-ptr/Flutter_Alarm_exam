@@ -68,12 +68,6 @@ class _MathRingScreenState extends State<MathRingScreen> {
             ),
 
             // 止める
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("test"),
-              ],
-            ),
             ElevatedButton(
               onPressed: () {
                 stopAlarm(context);
