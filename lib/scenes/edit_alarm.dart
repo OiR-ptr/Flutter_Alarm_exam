@@ -23,6 +23,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
   late double? volume;
   late String assetAudio;
   late AlarmAction action;
+  late int taskRepeat;
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       volume = null;
       assetAudio = 'assets/marimba.mp3';
       action = AlarmAction.math;
+      taskRepeat = 1;
     } else {
       selectedDateTime = widget.alarmSettings!.settings.dateTime;
       loopAudio = widget.alarmSettings!.settings.loopAudio;
@@ -44,6 +46,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       volume = widget.alarmSettings!.settings.volume;
       assetAudio = widget.alarmSettings!.settings.assetAudioPath;
       action = widget.alarmSettings!.extensionSettings.action;
+      taskRepeat = widget.alarmSettings!.extensionSettings.taskRepeat;
     }
   }
 
@@ -102,7 +105,11 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       notificationTitle: 'Alarm example',
       notificationBody: 'Your alarm ($id) is ringing',
     );
-    final exSettings = AlarmExtensionSettings(id: id, action: action);
+    final exSettings = AlarmExtensionSettings(
+      id: id,
+      action: action,
+      taskRepeat: taskRepeat,
+    );
     return MyAlarmSettings(
         id: id, settings: alarmSettings, extensionSettings: exSettings);
   }
@@ -257,6 +264,28 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                   ),
                 ],
                 onChanged: (value) => setState(() => action = value!),
+              ),
+              Text(
+                "Repeat",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              DropdownButton(
+                value: taskRepeat,
+                items: const [
+                  DropdownMenuItem<int>(
+                    value: 1,
+                    child: Text('1'),
+                  ),
+                  DropdownMenuItem<int>(
+                    value: 2,
+                    child: Text('2'),
+                  ),
+                  DropdownMenuItem<int>(
+                    value: 3,
+                    child: Text('3'),
+                  ),
+                ],
+                onChanged: (value) => setState(() => taskRepeat = value!),
               ),
             ],
           ),

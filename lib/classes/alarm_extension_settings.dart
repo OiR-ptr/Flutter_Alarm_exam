@@ -18,27 +18,35 @@ AlarmAction parseAction(String actionName) {
 class AlarmExtensionSettings {
   final int id;
   final AlarmAction action;
+  final int taskRepeat;
 
-  AlarmExtensionSettings({required this.id, required this.action});
+  AlarmExtensionSettings(
+      {required this.id, required this.action, required this.taskRepeat});
 
   AlarmExtensionSettings copyWith({
     int? id,
     AlarmAction? action,
+    int? taskRepeat,
   }) {
     return AlarmExtensionSettings(
       id: id ?? this.id,
       action: action ?? this.action,
+      taskRepeat: taskRepeat ?? this.taskRepeat,
     );
   }
 
   factory AlarmExtensionSettings.fromJson(Map<String, dynamic> json) =>
       AlarmExtensionSettings(
-          id: json['id'] as int, action: parseAction(json['action']));
+        id: json['id'] as int,
+        action: parseAction(json['action']),
+        taskRepeat: json['taskRepeat'] as int,
+      );
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'action': action.name,
+      'taskRepeat': taskRepeat,
     };
   }
 
