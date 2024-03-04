@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class MathRingScreen extends StatefulWidget {
   final MyAlarmSettings alarmSettings;
   final String questions;
-  const MathRingScreen({Key? key, required this.alarmSettings, required this.questions})
+  const MathRingScreen(
+      {Key? key, required this.alarmSettings, required this.questions})
       : super(key: key);
 
   @override
@@ -15,14 +16,14 @@ class _MathRingScreenState extends State<MathRingScreen> {
   final TextEditingController _controller = TextEditingController();
 
   Future<void> stopAlarm(BuildContext context) async {
-    if(!context.mounted) return;
+    if (!context.mounted) return;
 
-    if(_controller.text != "449") {
+    if (_controller.text != "449") {
       return;
     }
 
     await MyAlarm.stop(widget.alarmSettings.id);
-    if(context.mounted) {
+    if (context.mounted) {
       Navigator.popUntil(context, (route) => route.isFirst);
     }
   }

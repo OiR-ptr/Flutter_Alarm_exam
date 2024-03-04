@@ -29,7 +29,10 @@ class ExampleAlarmRingScreen extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MathRingScreen(alarmSettings: alarmSettings, questions: "192 + 256 + 1 = ?",),
+        builder: (context) => MathRingScreen(
+          alarmSettings: alarmSettings,
+          questions: "192 + 256 + 1 = ?",
+        ),
       ),
     );
   }
@@ -50,7 +53,8 @@ class ExampleAlarmRingScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 RawMaterialButton(
-                  onPressed: () => snoozeAlarm(context, const Duration(minutes: 1)),
+                  onPressed: () =>
+                      snoozeAlarm(context, const Duration(minutes: 1)),
                   child: Text(
                     "Snooze",
                     style: Theme.of(context).textTheme.titleLarge,
