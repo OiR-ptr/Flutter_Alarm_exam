@@ -1,4 +1,5 @@
 import 'package:alarming/classes/my_alarm_settings.dart';
+// import 'package:alarming/rings/face_detection.dart';
 import 'package:alarming/rings/math.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class ExampleAlarmRingScreen extends StatelessWidget {
     ).then((_) => Navigator.pop(context));
   }
 
-  void gotoStopActionPage(BuildContext context) {
+  Future<void> gotoStopActionPage(BuildContext context) async {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -35,6 +36,17 @@ class ExampleAlarmRingScreen extends StatelessWidget {
         ),
       ),
     );
+    // if (!context.mounted) return;
+    // await MyAlarm.stop(alarmSettings.id);
+
+    // if (context.mounted) {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => const FaceDetectionRingScreen(),
+    //     ),
+    //   );
+    // }
   }
 
   @override
