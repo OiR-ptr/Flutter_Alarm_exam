@@ -1,18 +1,36 @@
 import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
 
-class MathRingScreen extends StatelessWidget {
+class MathRingScreen extends StatefulWidget {
   final MyAlarmSettings alarmSettings;
-  const MathRingScreen({Key? key, required this.alarmSettings})
+  final String questions;
+  const MathRingScreen({Key? key, required this.alarmSettings, required this.questions})
       : super(key: key);
+
+  @override
+  State<MathRingScreen> createState() => _MathRingScreenState();
+}
+
+class _MathRingScreenState extends State<MathRingScreen> {
+  final TextEditingController _controller = TextEditingController();
 
   Future<void> stopAlarm(BuildContext context) async {
     if(!context.mounted) return;
 
-    await MyAlarm.stop(alarmSettings.id);
+    if(_controller.text != "449") {
+      return;
+    }
+
+    await MyAlarm.stop(widget.alarmSettings.id);
     if(context.mounted) {
       Navigator.popUntil(context, (route) => route.isFirst);
     }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -22,7 +40,37 @@ class MathRingScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("test"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(widget.questions),
+              ],
+            ),
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    autofocus: true,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter a search term',
+                    ),
+                  ),
+                )
+              ],
+            ),
+
+            // 止める
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("test"),
+              ],
+            ),
             ElevatedButton(
               onPressed: () {
                 stopAlarm(context);
