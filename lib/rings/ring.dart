@@ -32,7 +32,6 @@ class ExampleAlarmRingScreen extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) => MathRingScreen(
           alarmSettings: alarmSettings,
-          questions: "192 + 256 + 1 = ?",
         ),
       ),
     );

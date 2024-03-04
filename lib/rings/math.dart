@@ -1,12 +1,14 @@
+import 'package:alarming/classes/math_questions.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
 
 class MathRingScreen extends StatefulWidget {
   final MyAlarmSettings alarmSettings;
-  final String questions;
-  const MathRingScreen(
-      {Key? key, required this.alarmSettings, required this.questions})
-      : super(key: key);
+  late final MathQuestions questions;
+
+  MathRingScreen({Key? key, required this.alarmSettings}) : super(key: key) {
+    questions = MathQuestions.generate(Difficulty.hard);
+  }
 
   @override
   State<MathRingScreen> createState() => _MathRingScreenState();
@@ -18,7 +20,7 @@ class _MathRingScreenState extends State<MathRingScreen> {
   Future<void> stopAlarm(BuildContext context) async {
     if (!context.mounted) return;
 
-    if (_controller.text != "449") {
+    if (_controller.text != widget.questions.answer.toString()) {
       return;
     }
 
@@ -44,7 +46,7 @@ class _MathRingScreenState extends State<MathRingScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(widget.questions),
+                Text(widget.questions.questions),
               ],
             ),
             const Spacer(),
