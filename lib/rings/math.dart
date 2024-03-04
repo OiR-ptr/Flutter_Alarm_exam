@@ -6,9 +6,13 @@ class MathRingScreen extends StatelessWidget {
   const MathRingScreen({Key? key, required this.alarmSettings})
       : super(key: key);
 
-  void stopAlarm(BuildContext context) {
-    MyAlarm.stop(alarmSettings.id);
-    Navigator.pop(context);
+  Future<void> stopAlarm(BuildContext context) async {
+    if(!context.mounted) return;
+
+    await MyAlarm.stop(alarmSettings.id);
+    if(context.mounted) {
+      Navigator.popUntil(context, (route) => route.isFirst);
+    }
   }
 
   @override
