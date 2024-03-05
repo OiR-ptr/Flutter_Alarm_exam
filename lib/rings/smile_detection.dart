@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:alarming/classes/my_alarm_settings.dart';
+import 'package:alarming/classes/smile_detections.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,8 +8,11 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 class SmileDetectionRingScreen extends StatefulWidget {
   final MyAlarmSettings alarmSettings;
+  late final SmileDetections detections;
 
-  const SmileDetectionRingScreen({super.key, required this.alarmSettings});
+  SmileDetectionRingScreen({super.key, required this.alarmSettings}) {
+    detections = SmileDetections.generate(alarmSettings.extensionSettings.difficulty);
+  }
 
   @override
   State<SmileDetectionRingScreen> createState() =>
@@ -19,6 +23,7 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
   static List<CameraDescription> _cameras = [];
   CameraController? _camera;
   int _cameraIndex = -1;
+  int _taskIndex = 0;
 
   final FaceDetector _faceDetector = FaceDetector(
     options: FaceDetectorOptions(
@@ -87,6 +92,12 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
       // 初めて笑顔を検知した秒数を記録
       print("SMILE IS ${face.smilingProbability}");
     }
+  }
+
+  Future doneTask() async {
+    setState(() {
+      _taskIndex = _taskIndex + 1;
+    });
   }
 
   @override
