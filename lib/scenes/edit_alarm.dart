@@ -234,6 +234,10 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                     value: AlarmAction.math,
                     child: Text('Math'),
                   ),
+                  DropdownMenuItem<AlarmAction>(
+                    value: AlarmAction.smile,
+                    child: Text('Smile'),
+                  ),
                 ],
                 onChanged: (value) => setState(() => action = value!),
               ),
