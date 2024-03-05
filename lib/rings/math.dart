@@ -35,6 +35,7 @@ class _MathRingScreenState extends State<MathRingScreen> {
         // タスクが一つ完了
         setState(() {
           taskIndex = taskIndex + 1;
+          _controller.clear();
         });
 
         // スヌーズアラームを一分延長
