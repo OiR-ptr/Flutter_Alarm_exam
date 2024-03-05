@@ -1,11 +1,52 @@
-import 'package:alarm/alarm.dart';
+import 'package:alarming/classes/my_alarm_settings.dart';
+// import 'package:alarming/rings/face_detection.dart';
+import 'package:alarming/rings/math.dart';
 import 'package:flutter/material.dart';
 
 class ExampleAlarmRingScreen extends StatelessWidget {
-  final AlarmSettings alarmSettings;
+  final MyAlarmSettings alarmSettings;
 
   const ExampleAlarmRingScreen({Key? key, required this.alarmSettings})
       : super(key: key);
+
+  void snoozeAlarm(BuildContext context, Duration snoozeAfter) {
+    final now = DateTime.now();
+    MyAlarm.set(
+      settings: alarmSettings.copyWith(
+        dateTime: DateTime(
+          now.year,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          0,
+          0,
+        ).add(snoozeAfter),
+      ),
+    ).then((_) => Navigator.pop(context));
+  }
+
+  Future<void> gotoStopActionPage(BuildContext context) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MathRingScreen(
+          alarmSettings: alarmSettings,
+        ),
+      ),
+    );
+    // if (!context.mounted) return;
+    // await MyAlarm.stop(alarmSettings.id);
+
+    // if (context.mounted) {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => const FaceDetectionRingScreen(),
+    //     ),
+    //   );
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,32 +64,15 @@ class ExampleAlarmRingScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 RawMaterialButton(
-                  onPressed: () {
-                    final now = DateTime.now();
-                    Alarm.set(
-                      alarmSettings: alarmSettings.copyWith(
-                        dateTime: DateTime(
-                          now.year,
-                          now.month,
-                          now.day,
-                          now.hour,
-                          now.minute,
-                          0,
-                          0,
-                        ).add(const Duration(minutes: 1)),
-                      ),
-                    ).then((_) => Navigator.pop(context));
-                  },
+                  onPressed: () =>
+                      snoozeAlarm(context, const Duration(minutes: 1)),
                   child: Text(
                     "Snooze",
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
                 RawMaterialButton(
-                  onPressed: () {
-                    Alarm.stop(alarmSettings.id)
-                        .then((_) => Navigator.pop(context));
-                  },
+                  onPressed: () => gotoStopActionPage(context),
                   child: Text(
                     "Stop",
                     style: Theme.of(context).textTheme.titleLarge,

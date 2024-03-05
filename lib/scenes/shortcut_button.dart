@@ -1,4 +1,6 @@
 import 'package:alarm/alarm.dart';
+import 'package:alarming/classes/alarm_extension_settings.dart';
+import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
 
 class ExampleAlarmHomeShortcutButton extends StatefulWidget {
@@ -27,8 +29,9 @@ class _ExampleAlarmHomeShortcutButtonState
 
     setState(() => showMenu = false);
 
+    final id = DateTime.now().millisecondsSinceEpoch % 10000;
     final alarmSettings = AlarmSettings(
-      id: DateTime.now().millisecondsSinceEpoch % 10000,
+      id: id,
       dateTime: dateTime,
       assetAudioPath: 'assets/marimba.mp3',
       volume: volume,
@@ -37,7 +40,18 @@ class _ExampleAlarmHomeShortcutButtonState
           'Shortcut button alarm with delay of $delayInHours hours',
     );
 
-    await Alarm.set(alarmSettings: alarmSettings);
+    await MyAlarm.set(
+      settings: MyAlarmSettings(
+        id: id,
+        settings: alarmSettings,
+        extensionSettings: AlarmExtensionSettings(
+          id: id,
+          action: AlarmAction.math,
+          taskRepeat: 1,
+          difficulty: Difficulty.normal,
+        ),
+      ),
+    );
 
     widget.refreshAlarms();
   }
