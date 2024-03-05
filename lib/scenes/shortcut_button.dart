@@ -44,7 +44,12 @@ class _ExampleAlarmHomeShortcutButtonState
       settings: MyAlarmSettings(
         id: id,
         settings: alarmSettings,
-        extensionSettings: AlarmExtensionSettings(id: id),
+        extensionSettings: AlarmExtensionSettings(
+          id: id,
+          action: AlarmAction.math,
+          taskRepeat: 1,
+          difficulty: Difficulty.normal,
+        ),
       ),
     );
 
