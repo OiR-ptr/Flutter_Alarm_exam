@@ -21,7 +21,7 @@ class _MathRingScreenState extends State<MathRingScreen> {
   int taskIndex = 0;
   final TextEditingController _controller = TextEditingController();
 
-  Future<void> stopAlarm(BuildContext context) async {
+  Future<void> doneTask(BuildContext context) async {
     if (!context.mounted) return;
 
     if (_controller.text == widget.questions[taskIndex].answer.toString()) {
@@ -36,6 +36,24 @@ class _MathRingScreenState extends State<MathRingScreen> {
         setState(() {
           taskIndex = taskIndex + 1;
         });
+
+        // スヌーズアラームを一分延長
+        final now = DateTime.now();
+        await MyAlarm.set(
+          settings: widget.alarmSettings.copyWith(
+            dateTime: DateTime(
+              now.year,
+              now.month,
+              now.day,
+              now.hour,
+              now.minute,
+              0,
+              0,
+            ).add(
+              const Duration(minutes: 1),
+            ),
+          ),
+        );
       }
     }
   }
@@ -82,7 +100,7 @@ class _MathRingScreenState extends State<MathRingScreen> {
               // 止める
               ElevatedButton(
                 onPressed: () {
-                  stopAlarm(context);
+                  doneTask(context);
                 },
                 child: const Text("STOP"),
               ),
