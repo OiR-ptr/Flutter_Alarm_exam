@@ -1,12 +1,7 @@
 import 'dart:math';
 
-enum Difficulty {
-  veryEasy,
-  easy,
-  normal,
-  hard,
-  veryHard,
-}
+import 'package:alarming/classes/alarm_extension_settings.dart';
+
 
 class MathQuestions {
   final String questions;

@@ -18,12 +18,11 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
 
   late bool creating;
   late DateTime selectedDateTime;
-  late bool loopAudio;
-  late bool vibrate;
   late double? volume;
   late String assetAudio;
   late AlarmAction action;
   late int taskRepeat;
+  late Difficulty difficulty;
 
   @override
   void initState() {
@@ -33,20 +32,18 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
     if (creating) {
       selectedDateTime = DateTime.now().add(const Duration(minutes: 1));
       selectedDateTime = selectedDateTime.copyWith(second: 0, millisecond: 0);
-      loopAudio = true;
-      vibrate = true;
       volume = null;
       assetAudio = 'assets/marimba.mp3';
       action = AlarmAction.math;
       taskRepeat = 1;
+      difficulty = Difficulty.normal;
     } else {
       selectedDateTime = widget.alarmSettings!.settings.dateTime;
-      loopAudio = widget.alarmSettings!.settings.loopAudio;
-      vibrate = widget.alarmSettings!.settings.vibrate;
       volume = widget.alarmSettings!.settings.volume;
       assetAudio = widget.alarmSettings!.settings.assetAudioPath;
       action = widget.alarmSettings!.extensionSettings.action;
       taskRepeat = widget.alarmSettings!.extensionSettings.taskRepeat;
+      difficulty = widget.alarmSettings!.extensionSettings.difficulty;
     }
   }
 
@@ -98,8 +95,8 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
     final alarmSettings = AlarmSettings(
       id: id,
       dateTime: selectedDateTime,
-      loopAudio: loopAudio,
-      vibrate: vibrate,
+      loopAudio: true,
+      vibrate: true,
       volume: volume,
       assetAudioPath: assetAudio,
       notificationTitle: 'Alarm example',
@@ -109,6 +106,7 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
       id: id,
       action: action,
       taskRepeat: taskRepeat,
+      difficulty: difficulty,
     );
     return MyAlarmSettings(
         id: id, settings: alarmSettings, extensionSettings: exSettings);
@@ -191,32 +189,6 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Loop alarm audio',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Switch(
-                value: loopAudio,
-                onChanged: (value) => setState(() => loopAudio = value),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Vibrate',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Switch(
-                value: vibrate,
-                onChanged: (value) => setState(() => vibrate = value),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
                 'Sound',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
@@ -265,6 +237,11 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                 ],
                 onChanged: (value) => setState(() => action = value!),
               ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               Text(
                 "Repeat",
                 style: Theme.of(context).textTheme.titleMedium,
@@ -286,6 +263,36 @@ class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
                   ),
                 ],
                 onChanged: (value) => setState(() => taskRepeat = value!),
+              ),
+              Text(
+                "Difficulty",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              DropdownButton(
+                value: difficulty,
+                items: const [
+                  DropdownMenuItem<Difficulty>(
+                    value: Difficulty.veryEasy,
+                    child: Text('VERY EASY'),
+                  ),
+                  DropdownMenuItem<Difficulty>(
+                    value: Difficulty.easy,
+                    child: Text('EASY'),
+                  ),
+                  DropdownMenuItem<Difficulty>(
+                    value: Difficulty.normal,
+                    child: Text('NORMAL'),
+                  ),
+                  DropdownMenuItem<Difficulty>(
+                    value: Difficulty.hard,
+                    child: Text('HARD'),
+                  ),
+                  DropdownMenuItem<Difficulty>(
+                    value: Difficulty.veryHard,
+                    child: Text('VERY HARD'),
+                  ),
+                ],
+                onChanged: (value) => setState(() => difficulty = value!),
               ),
             ],
           ),

@@ -8,7 +8,7 @@ class MathRingScreen extends StatefulWidget {
 
   MathRingScreen({Key? key, required this.alarmSettings}) : super(key: key) {
     for (int i = 0; i < alarmSettings.extensionSettings.taskRepeat; i++) {
-      questions.add(MathQuestions.generate(Difficulty.hard));
+      questions.add(MathQuestions.generate(alarmSettings.extensionSettings.difficulty));
     }
   }
 

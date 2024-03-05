@@ -15,23 +15,50 @@ AlarmAction parseAction(String actionName) {
   return AlarmAction.math;
 }
 
+enum Difficulty {
+  veryEasy,
+  easy,
+  normal,
+  hard,
+  veryHard,
+}
+
+Difficulty parseDifficulty(String difficultyName) {
+  switch(difficultyName) {
+    case "veryEasy":  return Difficulty.veryEasy;
+    case "easy":      return Difficulty.easy;
+    case "normal":    return Difficulty.normal;
+    case "hard":      return Difficulty.hard;
+    case "veryHard":  return Difficulty.veryHard;
+  }
+
+  return Difficulty.normal;
+}
+
 class AlarmExtensionSettings {
   final int id;
   final AlarmAction action;
   final int taskRepeat;
+  final Difficulty difficulty;
 
-  AlarmExtensionSettings(
-      {required this.id, required this.action, required this.taskRepeat});
+  AlarmExtensionSettings({
+    required this.id,
+    required this.action,
+    required this.taskRepeat,
+    required this.difficulty,
+  });
 
   AlarmExtensionSettings copyWith({
     int? id,
     AlarmAction? action,
     int? taskRepeat,
+    Difficulty? difficulty,
   }) {
     return AlarmExtensionSettings(
       id: id ?? this.id,
       action: action ?? this.action,
       taskRepeat: taskRepeat ?? this.taskRepeat,
+      difficulty: difficulty ?? this.difficulty,
     );
   }
 
@@ -40,6 +67,7 @@ class AlarmExtensionSettings {
         id: json['id'] as int,
         action: parseAction(json['action']),
         taskRepeat: json['taskRepeat'] as int,
+        difficulty: parseDifficulty(json['difficulty']),
       );
 
   Map<String, dynamic> toJson() {
@@ -47,6 +75,7 @@ class AlarmExtensionSettings {
       'id': id,
       'action': action.name,
       'taskRepeat': taskRepeat,
+      'difficulty': difficulty.name,
     };
   }
 
