@@ -8,7 +8,8 @@ class MathRingScreen extends StatefulWidget {
 
   MathRingScreen({Key? key, required this.alarmSettings}) : super(key: key) {
     for (int i = 0; i < alarmSettings.extensionSettings.taskRepeat; i++) {
-      questions.add(MathQuestions.generate(alarmSettings.extensionSettings.difficulty));
+      questions.add(
+          MathQuestions.generate(alarmSettings.extensionSettings.difficulty));
     }
   }
 
@@ -47,43 +48,46 @@ class _MathRingScreenState extends State<MathRingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(widget.questions[taskIndex].questions),
-              ],
-            ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    autofocus: true,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Enter a search term',
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(widget.questions[taskIndex].questions),
+                ],
+              ),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      autofocus: true,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Enter a search term',
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
+                  )
+                ],
+              ),
 
-            // 止める
-            ElevatedButton(
-              onPressed: () {
-                stopAlarm(context);
-              },
-              child: const Text("STOP"),
-            ),
-          ],
+              // 止める
+              ElevatedButton(
+                onPressed: () {
+                  stopAlarm(context);
+                },
+                child: const Text("STOP"),
+              ),
+            ],
+          ),
         ),
       ),
     );
