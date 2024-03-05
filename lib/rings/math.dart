@@ -58,7 +58,7 @@ class _MathRingScreenState extends State<MathRingScreen> with TickerProviderStat
               now.day,
               now.hour,
               now.minute,
-              0,
+              now.second,
               0,
             ).add(
               const Duration(minutes: 1),
