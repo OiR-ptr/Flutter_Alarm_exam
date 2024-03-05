@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 
 class MathRingScreen extends StatefulWidget {
   final MyAlarmSettings alarmSettings;
-  late final MathQuestions questions;
+  late final List<MathQuestions> questions = List.empty(growable: true);
 
   MathRingScreen({Key? key, required this.alarmSettings}) : super(key: key) {
-    questions = MathQuestions.generate(Difficulty.hard);
+    for (int i = 0; i < alarmSettings.extensionSettings.taskRepeat; i++) {
+      questions.add(MathQuestions.generate(Difficulty.hard));
+    }
   }
 
   @override
@@ -15,18 +17,25 @@ class MathRingScreen extends StatefulWidget {
 }
 
 class _MathRingScreenState extends State<MathRingScreen> {
+  int taskIndex = 0;
   final TextEditingController _controller = TextEditingController();
 
   Future<void> stopAlarm(BuildContext context) async {
     if (!context.mounted) return;
 
-    if (_controller.text != widget.questions.answer.toString()) {
-      return;
-    }
-
-    await MyAlarm.stop(widget.alarmSettings.id);
-    if (context.mounted) {
-      Navigator.popUntil(context, (route) => route.isFirst);
+    if (_controller.text == widget.questions[taskIndex].answer.toString()) {
+      if (taskIndex == widget.questions.length - 1) {
+        // 全タスクが完了したらページ遷移する
+        await MyAlarm.stop(widget.alarmSettings.id);
+        if (context.mounted) {
+          Navigator.popUntil(context, (route) => route.isFirst);
+        }
+      } else {
+        // タスクが一つ完了
+        setState(() {
+          taskIndex = taskIndex + 1;
+        });
+      }
     }
   }
 
@@ -46,7 +55,7 @@ class _MathRingScreenState extends State<MathRingScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(widget.questions.questions),
+                Text(widget.questions[taskIndex].questions),
               ],
             ),
             const Spacer(),
