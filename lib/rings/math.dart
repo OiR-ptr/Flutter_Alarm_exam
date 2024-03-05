@@ -17,14 +17,23 @@ class MathRingScreen extends StatefulWidget {
   State<MathRingScreen> createState() => _MathRingScreenState();
 }
 
-class _MathRingScreenState extends State<MathRingScreen> {
+class _MathRingScreenState extends State<MathRingScreen> with TickerProviderStateMixin {
   int taskIndex = 0;
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _numberInput = TextEditingController();
+  late final AnimationController _animation;
+
+  @override
+  void initState() {
+    _animation = AnimationController(vsync: this, duration: const Duration(minutes: 1));
+    _animation.addListener(() {setState(() {});});
+    _animation.repeat(reverse: true);
+    super.initState();
+  }
 
   Future<void> doneTask(BuildContext context) async {
     if (!context.mounted) return;
 
-    if (_controller.text == widget.questions[taskIndex].answer.toString()) {
+    if (_numberInput.text == widget.questions[taskIndex].answer.toString()) {
       if (taskIndex == widget.questions.length - 1) {
         // 全タスクが完了したらページ遷移する
         await MyAlarm.stop(widget.alarmSettings.id);
@@ -35,7 +44,8 @@ class _MathRingScreenState extends State<MathRingScreen> {
         // タスクが一つ完了
         setState(() {
           taskIndex = taskIndex + 1;
-          _controller.clear();
+          _numberInput.clear();
+          _animation..reset()..repeat(reverse: true);
         });
 
         // スヌーズアラームを一分延長
@@ -61,7 +71,8 @@ class _MathRingScreenState extends State<MathRingScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _numberInput.dispose();
+    _animation.dispose();
     super.dispose();
   }
 
@@ -74,6 +85,10 @@ class _MathRingScreenState extends State<MathRingScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              LinearProgressIndicator(
+                value: _animation.value,
+                semanticsLabel: "Linear Progress Indicator",
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -86,7 +101,7 @@ class _MathRingScreenState extends State<MathRingScreen> {
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: _controller,
+                      controller: _numberInput,
                       autofocus: true,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
