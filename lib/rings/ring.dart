@@ -19,7 +19,7 @@ class ExampleAlarmRingScreen extends StatelessWidget {
           now.day,
           now.hour,
           now.minute,
-          0,
+          now.second,
           0,
         ).add(snoozeAfter),
       ),
