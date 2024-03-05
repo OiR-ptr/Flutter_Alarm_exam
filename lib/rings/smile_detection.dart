@@ -38,7 +38,7 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
       _cameras = await availableCameras();
     }
     for (var i = 0; i < _cameras.length; i++) {
-      if (_cameras[i].lensDirection == CameraLensDirection.back) {
+      if (_cameras[i].lensDirection == CameraLensDirection.front) {
         _cameraIndex = i;
         break;
       }
@@ -86,8 +86,6 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
     for (Face face in faces) {
       // 初めて笑顔を検知した秒数を記録
       print("SMILE IS ${face.smilingProbability}");
-
-
     }
   }
 
@@ -123,14 +121,9 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
   InputImage? _inputImageFromCameraImage(CameraImage image) {
     if (_camera == null) return null;
 
-    // get image rotation
-    // it is used in android to convert the InputImage from Dart to Java: https://github.com/flutter-ml/google_ml_kit_flutter/blob/master/packages/google_mlkit_commons/android/src/main/java/com/google_mlkit_commons/InputImageConverter.java
-    // `rotation` is not used in iOS to convert the InputImage from Dart to Obj-C: https://github.com/flutter-ml/google_ml_kit_flutter/blob/master/packages/google_mlkit_commons/ios/Classes/MLKVisionImage%2BFlutterPlugin.m
-    // in both platforms `rotation` and `camera.lensDirection` can be used to compensate `x` and `y` coordinates on a canvas: https://github.com/flutter-ml/google_ml_kit_flutter/blob/master/packages/example/lib/vision_detector_views/painters/coordinates_translator.dart
     final camera = _cameras[_cameraIndex];
     final sensorOrientation = camera.sensorOrientation;
-    // print(
-    //     'lensDirection: ${camera.lensDirection}, sensorOrientation: $sensorOrientation, ${_controller?.value.deviceOrientation} ${_controller?.value.lockedCaptureOrientation} ${_controller?.value.isCaptureOrientationLocked}');
+
     InputImageRotation? rotation;
     if (Platform.isIOS) {
       rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
@@ -147,17 +140,11 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
             (sensorOrientation - rotationCompensation + 360) % 360;
       }
       rotation = InputImageRotationValue.fromRawValue(rotationCompensation);
-      // print('rotationCompensation: $rotationCompensation');
     }
     if (rotation == null) return null;
-    // print('final rotation: $rotation');
 
     // get image format
     final format = InputImageFormatValue.fromRawValue(image.format.raw);
-    // validate format depending on platform
-    // only supported formats:
-    // * nv21 for Android
-    // * bgra8888 for iOS
     if (format == null ||
         (Platform.isAndroid && format != InputImageFormat.nv21) ||
         (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
