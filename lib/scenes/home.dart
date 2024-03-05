@@ -28,7 +28,7 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
         alarms.firstWhere((alarm) => alarm.id == alarmSettings.id),
       );
     });
-    MyAlarm.stopAll(); // 開発時にshared:preferenceを吹っ飛ばすために追加している
+    // MyAlarm.stopAll(); // 開発時にshared:preferenceを吹っ飛ばすために追加している
     loadAlarms();
   }
 
