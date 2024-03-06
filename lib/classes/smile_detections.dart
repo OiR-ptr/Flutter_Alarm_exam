@@ -29,7 +29,7 @@ class SmileDetections {
         break;
       case Difficulty.veryHard:
         keepDuration = const Duration(seconds: 5);
-        threshold = 0.9;
+        threshold = 0.95;
         break;
     }
 

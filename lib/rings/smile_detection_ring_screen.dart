@@ -8,10 +8,13 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 class SmileDetectionRingScreen extends StatefulWidget {
   final MyAlarmSettings alarmSettings;
+  late final int taskRepeat;
   late final SmileDetections detections;
 
   SmileDetectionRingScreen({super.key, required this.alarmSettings}) {
-    detections = SmileDetections.generate(alarmSettings.extensionSettings.difficulty);
+    detections =
+        SmileDetections.generate(alarmSettings.extensionSettings.difficulty);
+    taskRepeat = alarmSettings.extensionSettings.taskRepeat;
   }
 
   @override
@@ -19,11 +22,14 @@ class SmileDetectionRingScreen extends StatefulWidget {
       _SmileDetectionRingScreenState();
 }
 
-class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
+class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen>
+    with TickerProviderStateMixin {
   static List<CameraDescription> _cameras = [];
+  late final AnimationController _progressController;
   CameraController? _camera;
   int _cameraIndex = -1;
   int _taskIndex = 0;
+  bool _taskDone = false;
 
   final FaceDetector _faceDetector = FaceDetector(
     options: FaceDetectorOptions(
@@ -35,6 +41,20 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
   void initState() {
     super.initState();
 
+    _progressController = AnimationController(
+      vsync: this,
+      duration: widget.detections.keepDuration,
+    );
+    _progressController.addListener(() {
+      setState(() {});
+    });
+    _progressController.addStatusListener(
+      (status) {
+        if (status == AnimationStatus.completed) {
+          doneTask();
+        }
+      },
+    );
     _initialize();
   }
 
@@ -57,6 +77,8 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
   void dispose() {
     _faceDetector.close();
     _stopLiveFeed();
+    _progressController.stop();
+    _progressController.dispose();
     super.dispose();
   }
 
@@ -88,27 +110,87 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
 
   Future<void> _processImage(InputImage inputImage) async {
     final faces = await _faceDetector.processImage(inputImage);
-    for (Face face in faces) {
-      // 初めて笑顔を検知した秒数を記録
-      print("SMILE IS ${face.smilingProbability}");
+    if (faces.isEmpty) {
+      print("[SMILE] FACE IS NOT FOUND.");
+      return;
+    }
+
+    final Face face = faces.first;
+    if (widget.detections.threshold < face.smilingProbability!) {
+      if (_progressController.status == AnimationStatus.dismissed) {
+        print("[SMILE] ACTIVATE PROGRESS CONTROLLER.");
+        _progressController
+          ..reset()
+          ..forward();
+      }
+    } else if (_progressController.status == AnimationStatus.completed) {
+      print(
+          "[SMILE] DEACTIVATE PROGRESS CONTROLLER.${face.smilingProbability!}");
+      _progressController.reset();
     }
   }
 
   Future doneTask() async {
+    // アクション中のスヌーズアラームを一分延長
+    final now = DateTime.now();
+    await MyAlarm.set(
+        settings: widget.alarmSettings.copyWith(
+      dateTime: DateTime(
+        now.year,
+        now.month,
+        now.day,
+        now.hour,
+        now.minute,
+        now.second,
+        0,
+      ).add(
+        const Duration(minutes: 1),
+      ),
+    ));
+
     setState(() {
       _taskIndex = _taskIndex + 1;
     });
+
+    if (widget.taskRepeat <= _taskIndex) {
+      setState(() {
+        _taskDone = true;
+      });
+    }
+  }
+
+  Future gotoHome(BuildContext context) async {
+    if (!context.mounted) return;
+    await MyAlarm.stop(widget.alarmSettings.id);
+
+    if (context.mounted) {
+      Navigator.popUntil(context, (route) => route.isFirst);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _liveFeedBody());
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: SafeArea(
+          child: _liveFeedBody(context),
+        ),
+      ),
+    );
   }
 
-  Widget _liveFeedBody() {
+  Widget _liveFeedBody(BuildContext context) {
     if (_cameras.isEmpty) return Container();
     if (_camera == null) return Container();
     if (_camera?.value.isInitialized == false) return Container();
+    if (_taskDone) {
+      return ElevatedButton(
+        child: const Text("終わり"),
+        onPressed: () => gotoHome(context),
+      );
+    }
+
     return ColoredBox(
       color: Colors.black,
       child: Stack(
@@ -116,6 +198,32 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen> {
         children: <Widget>[
           Center(
             child: CameraPreview(_camera!),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "KEEP SMILE!",
+                  style: TextStyle(
+                      backgroundColor: Theme.of(context).highlightColor),
+                ),
+                Text(
+                  "$_taskIndex / ${widget.taskRepeat}",
+                  style: TextStyle(
+                      backgroundColor: Theme.of(context).highlightColor),
+                ),
+              ],
+            ),
+          ),
+          Center(
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: CircularProgressIndicator(
+                value: _progressController.value,
+              ),
+            ),
           ),
         ],
       ),
