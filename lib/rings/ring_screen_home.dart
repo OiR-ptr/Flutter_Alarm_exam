@@ -1,12 +1,13 @@
+import 'package:alarming/classes/alarm_extension_settings.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
-// import 'package:alarming/rings/face_detection.dart';
-import 'package:alarming/rings/math.dart';
+import 'package:alarming/rings/math_ring_screen.dart';
+import 'package:alarming/rings/smile_detection_ring_screen.dart';
 import 'package:flutter/material.dart';
 
-class ExampleAlarmRingScreen extends StatelessWidget {
+class RingScreenHome extends StatelessWidget {
   final MyAlarmSettings alarmSettings;
 
-  const ExampleAlarmRingScreen({Key? key, required this.alarmSettings})
+  const RingScreenHome({Key? key, required this.alarmSettings})
       : super(key: key);
 
   void snoozeAlarm(BuildContext context, Duration snoozeAfter) {
@@ -44,24 +45,16 @@ class ExampleAlarmRingScreen extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MathRingScreen(
-            alarmSettings: alarmSettings,
-          ),
+          builder: (context) {
+            // アクション設定に従って分岐
+            switch(alarmSettings.extensionSettings.action) {
+              case AlarmAction.math:  return MathRingScreen(alarmSettings: alarmSettings,);
+              case AlarmAction.smile: return SmileDetectionRingScreen(alarmSettings: alarmSettings,);
+            }
+          },
         ),
       );
     });
-
-    // if (!context.mounted) return;
-    // await MyAlarm.stop(alarmSettings.id);
-
-    // if (context.mounted) {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => const FaceDetectionRingScreen(),
-    //     ),
-    //   );
-    // }
   }
 
   @override

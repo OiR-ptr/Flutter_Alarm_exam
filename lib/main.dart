@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:alarming/classes/my_alarm_settings.dart';
-import 'package:alarming/scenes/home.dart';
+import 'package:alarming/scenes/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,7 +14,7 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       theme: ThemeData(useMaterial3: false),
-      home: const ExampleAlarmHomeScreen(),
+      home: const AlarmHomeScreen(),
     ),
   );
 }

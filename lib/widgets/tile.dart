@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class ExampleAlarmTile extends StatelessWidget {
+class AlarmTile extends StatelessWidget {
   final String title;
   final void Function() onPressed;
   final void Function()? onDismissed;
 
-  const ExampleAlarmTile({
+  const AlarmTile({
     Key? key,
     required this.title,
     required this.onPressed,

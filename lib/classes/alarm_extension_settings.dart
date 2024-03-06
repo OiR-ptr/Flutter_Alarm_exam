@@ -4,12 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 enum AlarmAction {
   math,
+  smile,
 }
 
 AlarmAction parseAction(String actionName) {
   switch (actionName) {
-    case "math":
-      return AlarmAction.math;
+    case "math":      return AlarmAction.math;
+    case "smile":     return AlarmAction.smile;
   }
 
   return AlarmAction.math;

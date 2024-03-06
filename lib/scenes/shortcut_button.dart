@@ -3,19 +3,19 @@ import 'package:alarming/classes/alarm_extension_settings.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
 
-class ExampleAlarmHomeShortcutButton extends StatefulWidget {
+class AlarmShortcutButton extends StatefulWidget {
   final void Function() refreshAlarms;
 
-  const ExampleAlarmHomeShortcutButton({Key? key, required this.refreshAlarms})
+  const AlarmShortcutButton({Key? key, required this.refreshAlarms})
       : super(key: key);
 
   @override
-  State<ExampleAlarmHomeShortcutButton> createState() =>
-      _ExampleAlarmHomeShortcutButtonState();
+  State<AlarmShortcutButton> createState() =>
+      _AlarmShortcutButtonState();
 }
 
-class _ExampleAlarmHomeShortcutButtonState
-    extends State<ExampleAlarmHomeShortcutButton> {
+class _AlarmShortcutButtonState
+    extends State<AlarmShortcutButton> {
   bool showMenu = false;
 
   Future<void> onPressButton(int delayInHours) async {
