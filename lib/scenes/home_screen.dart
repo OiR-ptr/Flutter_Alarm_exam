@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:alarm/alarm.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
-import 'package:alarming/scenes/edit_alarm.dart';
-import 'package:alarming/rings/ring.dart';
+import 'package:alarming/scenes/edit_alarm_screen.dart';
+import 'package:alarming/rings/ring_screen_home.dart';
 import 'package:alarming/scenes/shortcut_button.dart';
 import 'package:alarming/widgets/tile.dart';
 import 'package:flutter/material.dart';
 
-class ExampleAlarmHomeScreen extends StatefulWidget {
-  const ExampleAlarmHomeScreen({Key? key}) : super(key: key);
+class AlarmHomeScreen extends StatefulWidget {
+  const AlarmHomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<ExampleAlarmHomeScreen> createState() => _ExampleAlarmHomeScreenState();
+  State<AlarmHomeScreen> createState() => _AlarmHomeScreenState();
 }
 
-class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
+class _AlarmHomeScreenState extends State<AlarmHomeScreen> {
   late List<MyAlarmSettings> alarms;
 
   static StreamSubscription<AlarmSettings>? subscription;
@@ -45,7 +45,7 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              ExampleAlarmRingScreen(alarmSettings: alarmSettings),
+              RingScreenHome(alarmSettings: alarmSettings),
         ));
     loadAlarms();
   }
@@ -60,7 +60,7 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
         builder: (context) {
           return FractionallySizedBox(
             heightFactor: 0.75,
-            child: ExampleAlarmEditScreen(alarmSettings: settings),
+            child: AlarmEditScreen(alarmSettings: settings),
           );
         });
 
@@ -83,7 +83,7 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
                 itemCount: alarms.length,
                 separatorBuilder: (context, index) => const Divider(height: 1),
                 itemBuilder: (context, index) {
-                  return ExampleAlarmTile(
+                  return AlarmTile(
                     key: Key(alarms[index].settings.id.toString()),
                     title: TimeOfDay(
                       hour: alarms[index].settings.dateTime.hour,
@@ -108,7 +108,7 @@ class _ExampleAlarmHomeScreenState extends State<ExampleAlarmHomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ExampleAlarmHomeShortcutButton(refreshAlarms: loadAlarms),
+            AlarmShortcutButton(refreshAlarms: loadAlarms),
             FloatingActionButton(
               onPressed: () => navigateToAlarmScreen(null),
               child: const Icon(Icons.alarm_add_rounded, size: 33),

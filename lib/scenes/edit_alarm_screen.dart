@@ -3,17 +3,17 @@ import 'package:alarming/classes/alarm_extension_settings.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
 
-class ExampleAlarmEditScreen extends StatefulWidget {
+class AlarmEditScreen extends StatefulWidget {
   final MyAlarmSettings? alarmSettings;
 
-  const ExampleAlarmEditScreen({Key? key, this.alarmSettings})
+  const AlarmEditScreen({Key? key, this.alarmSettings})
       : super(key: key);
 
   @override
-  State<ExampleAlarmEditScreen> createState() => _ExampleAlarmEditScreenState();
+  State<AlarmEditScreen> createState() => _AlarmEditScreenState();
 }
 
-class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
+class _AlarmEditScreenState extends State<AlarmEditScreen> {
   bool loading = false;
 
   late bool creating;
