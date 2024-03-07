@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 class AlarmEditScreen extends StatefulWidget {
   final MyAlarmSettings? alarmSettings;
 
-  const AlarmEditScreen({Key? key, this.alarmSettings})
-      : super(key: key);
+  const AlarmEditScreen({Key? key, this.alarmSettings}) : super(key: key);
 
   @override
   State<AlarmEditScreen> createState() => _AlarmEditScreenState();
@@ -18,7 +17,7 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
 
   late bool creating;
   late DateTime selectedDateTime;
-  late double? volume;
+  late double volume;
   late String assetAudio;
   late AlarmAction action;
   late int taskRepeat;
@@ -32,35 +31,18 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
     if (creating) {
       selectedDateTime = DateTime.now().add(const Duration(minutes: 1));
       selectedDateTime = selectedDateTime.copyWith(second: 0, millisecond: 0);
-      volume = null;
+      volume = 0.5;
       assetAudio = 'assets/marimba.mp3';
       action = AlarmAction.math;
       taskRepeat = 1;
       difficulty = Difficulty.normal;
     } else {
       selectedDateTime = widget.alarmSettings!.settings.dateTime;
-      volume = widget.alarmSettings!.settings.volume;
+      volume = widget.alarmSettings!.settings.volume!;
       assetAudio = widget.alarmSettings!.settings.assetAudioPath;
       action = widget.alarmSettings!.extensionSettings.action;
       taskRepeat = widget.alarmSettings!.extensionSettings.taskRepeat;
       difficulty = widget.alarmSettings!.extensionSettings.difficulty;
-    }
-  }
-
-  String getDay() {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final difference = selectedDateTime.difference(today).inDays;
-
-    switch (difference) {
-      case 0:
-        return 'Today';
-      case 1:
-        return 'Tomorrow';
-      case 2:
-        return 'After tomorrow';
-      default:
-        return 'In $difference days';
     }
   }
 
@@ -132,226 +114,183 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text(
-                  "Cancel",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(color: Colors.blueAccent),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("EDIT ALARM"),
+      ),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RawMaterialButton(
+                onPressed: pickTime,
+                fillColor: Colors.grey[200],
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  child: Text(
+                    TimeOfDay.fromDateTime(selectedDateTime).format(context),
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayMedium!
+                        .copyWith(color: Colors.blueAccent),
+                  ),
                 ),
               ),
+            ),
+            SizedBox(
+              height: 30,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    volume > 0.7
+                        ? Icons.volume_up_rounded
+                        : volume > 0.1
+                            ? Icons.volume_down_rounded
+                            : Icons.volume_mute_rounded,
+                  ),
+                  Expanded(
+                    child: Slider(
+                      value: volume,
+                      onChanged: (value) {
+                        setState(() => volume = value);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Sound',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                DropdownButton(
+                  value: assetAudio,
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: 'assets/marimba.mp3',
+                      child: Text('Marimba'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'assets/nokia.mp3',
+                      child: Text('Nokia'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'assets/mozart.mp3',
+                      child: Text('Mozart'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'assets/star_wars.mp3',
+                      child: Text('Star Wars'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'assets/one_piece.mp3',
+                      child: Text('One Piece'),
+                    ),
+                  ],
+                  onChanged: (value) => setState(() => assetAudio = value!),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Action",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                DropdownButton(
+                  value: action,
+                  items: const [
+                    DropdownMenuItem<AlarmAction>(
+                      value: AlarmAction.math,
+                      child: Text('Math'),
+                    ),
+                    DropdownMenuItem<AlarmAction>(
+                      value: AlarmAction.smile,
+                      child: Text('Smile'),
+                    ),
+                  ],
+                  onChanged: (value) => setState(() => action = value!),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Repeat",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                DropdownButton(
+                  value: taskRepeat,
+                  items: const [
+                    DropdownMenuItem<int>(
+                      value: 1,
+                      child: Text('1'),
+                    ),
+                    DropdownMenuItem<int>(
+                      value: 2,
+                      child: Text('2'),
+                    ),
+                    DropdownMenuItem<int>(
+                      value: 3,
+                      child: Text('3'),
+                    ),
+                  ],
+                  onChanged: (value) => setState(() => taskRepeat = value!),
+                ),
+                Text(
+                  "Difficulty",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                DropdownButton(
+                  value: difficulty,
+                  items: const [
+                    DropdownMenuItem<Difficulty>(
+                      value: Difficulty.veryEasy,
+                      child: Text('VERY EASY'),
+                    ),
+                    DropdownMenuItem<Difficulty>(
+                      value: Difficulty.easy,
+                      child: Text('EASY'),
+                    ),
+                    DropdownMenuItem<Difficulty>(
+                      value: Difficulty.normal,
+                      child: Text('NORMAL'),
+                    ),
+                    DropdownMenuItem<Difficulty>(
+                      value: Difficulty.hard,
+                      child: Text('HARD'),
+                    ),
+                    DropdownMenuItem<Difficulty>(
+                      value: Difficulty.veryHard,
+                      child: Text('VERY HARD'),
+                    ),
+                  ],
+                  onChanged: (value) => setState(() => difficulty = value!),
+                ),
+              ],
+            ),
+            if (!creating)
               TextButton(
-                onPressed: saveAlarm,
-                child: loading
-                    ? const CircularProgressIndicator()
-                    : Text(
-                        "Save",
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(color: Colors.blueAccent),
-                      ),
+                onPressed: deleteAlarm,
+                child: Text(
+                  'Delete Alarm',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium!
+                      .copyWith(color: Colors.red),
+                ),
               ),
-            ],
-          ),
-          Text(
-            getDay(),
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(color: Colors.blueAccent.withOpacity(0.8)),
-          ),
-          RawMaterialButton(
-            onPressed: pickTime,
-            fillColor: Colors.grey[200],
-            child: Container(
-              margin: const EdgeInsets.all(20),
-              child: Text(
-                TimeOfDay.fromDateTime(selectedDateTime).format(context),
-                style: Theme.of(context)
-                    .textTheme
-                    .displayMedium!
-                    .copyWith(color: Colors.blueAccent),
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Sound',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              DropdownButton(
-                value: assetAudio,
-                items: const [
-                  DropdownMenuItem<String>(
-                    value: 'assets/marimba.mp3',
-                    child: Text('Marimba'),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: 'assets/nokia.mp3',
-                    child: Text('Nokia'),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: 'assets/mozart.mp3',
-                    child: Text('Mozart'),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: 'assets/star_wars.mp3',
-                    child: Text('Star Wars'),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: 'assets/one_piece.mp3',
-                    child: Text('One Piece'),
-                  ),
-                ],
-                onChanged: (value) => setState(() => assetAudio = value!),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Action",
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              DropdownButton(
-                value: action,
-                items: const [
-                  DropdownMenuItem<AlarmAction>(
-                    value: AlarmAction.math,
-                    child: Text('Math'),
-                  ),
-                  DropdownMenuItem<AlarmAction>(
-                    value: AlarmAction.smile,
-                    child: Text('Smile'),
-                  ),
-                ],
-                onChanged: (value) => setState(() => action = value!),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Repeat",
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              DropdownButton(
-                value: taskRepeat,
-                items: const [
-                  DropdownMenuItem<int>(
-                    value: 1,
-                    child: Text('1'),
-                  ),
-                  DropdownMenuItem<int>(
-                    value: 2,
-                    child: Text('2'),
-                  ),
-                  DropdownMenuItem<int>(
-                    value: 3,
-                    child: Text('3'),
-                  ),
-                ],
-                onChanged: (value) => setState(() => taskRepeat = value!),
-              ),
-              Text(
-                "Difficulty",
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              DropdownButton(
-                value: difficulty,
-                items: const [
-                  DropdownMenuItem<Difficulty>(
-                    value: Difficulty.veryEasy,
-                    child: Text('VERY EASY'),
-                  ),
-                  DropdownMenuItem<Difficulty>(
-                    value: Difficulty.easy,
-                    child: Text('EASY'),
-                  ),
-                  DropdownMenuItem<Difficulty>(
-                    value: Difficulty.normal,
-                    child: Text('NORMAL'),
-                  ),
-                  DropdownMenuItem<Difficulty>(
-                    value: Difficulty.hard,
-                    child: Text('HARD'),
-                  ),
-                  DropdownMenuItem<Difficulty>(
-                    value: Difficulty.veryHard,
-                    child: Text('VERY HARD'),
-                  ),
-                ],
-                onChanged: (value) => setState(() => difficulty = value!),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Custom volume',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Switch(
-                value: volume != null,
-                onChanged: (value) =>
-                    setState(() => volume = value ? 0.5 : null),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 30,
-            child: volume != null
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(
-                        volume! > 0.7
-                            ? Icons.volume_up_rounded
-                            : volume! > 0.1
-                                ? Icons.volume_down_rounded
-                                : Icons.volume_mute_rounded,
-                      ),
-                      Expanded(
-                        child: Slider(
-                          value: volume!,
-                          onChanged: (value) {
-                            setState(() => volume = value);
-                          },
-                        ),
-                      ),
-                    ],
-                  )
-                : const SizedBox(),
-          ),
-          if (!creating)
-            TextButton(
-              onPressed: deleteAlarm,
-              child: Text(
-                'Delete Alarm',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium!
-                    .copyWith(color: Colors.red),
-              ),
-            ),
-          const SizedBox(),
-        ],
+            const Spacer(),
+          ],
+        ),
       ),
     );
   }

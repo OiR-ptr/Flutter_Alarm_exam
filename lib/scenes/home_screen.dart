@@ -44,27 +44,36 @@ class _AlarmHomeScreenState extends State<AlarmHomeScreen> {
     await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              RingScreenHome(alarmSettings: alarmSettings),
+          builder: (context) => RingScreenHome(alarmSettings: alarmSettings),
         ));
     loadAlarms();
   }
 
   Future<void> navigateToAlarmScreen(MyAlarmSettings? settings) async {
-    final res = await showModalBottomSheet<bool?>(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AlarmEditScreen(
+          alarmSettings: settings,
         ),
-        builder: (context) {
-          return FractionallySizedBox(
-            heightFactor: 0.75,
-            child: AlarmEditScreen(alarmSettings: settings),
-          );
-        });
+      ),
+    );
+    loadAlarms();
 
-    if (res != null && res == true) loadAlarms();
+    // final res = await showModalBottomSheet<bool?>(
+    //     context: context,
+    //     isScrollControlled: true,
+    //     shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.circular(10.0),
+    //     ),
+    //     builder: (context) {
+    //       return FractionallySizedBox(
+    //         heightFactor: 0.75,
+    //         child: AlarmEditScreen(alarmSettings: settings),
+    //       );
+    //     });
+
+    // if (res != null && res == true) loadAlarms();
   }
 
   @override
