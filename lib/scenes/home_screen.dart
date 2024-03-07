@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:alarm/alarm.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
-import 'package:alarming/scenes/edit_alarm_screen.dart';
+import 'package:alarming/scenes/alarm_edit_screen.dart';
 import 'package:alarming/rings/ring_screen_home.dart';
 import 'package:alarming/scenes/shortcut_button.dart';
-import 'package:alarming/widgets/tile.dart';
+import 'package:alarming/widgets/alarm_tile.dart';
 import 'package:flutter/material.dart';
 
 class AlarmHomeScreen extends StatefulWidget {
