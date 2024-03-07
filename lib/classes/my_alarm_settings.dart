@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:alarm/alarm.dart';
 import 'package:alarming/classes/alarm_extension_settings.dart';
+import 'package:alarming/classes/day_of_week.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MyAlarm {
@@ -100,6 +101,10 @@ class MyAlarmSettings {
     String? notificationBody,
     bool? enableNotificationOnKill,
     bool? androidFullScreenIntent,
+    AlarmAction? action,
+    int? taskRepeat,
+    Difficulty? difficulty,
+    Iterable<DayOfWeek>? ringsDayOfWeek,
   }) {
     return MyAlarmSettings(
       id: id ?? this.id,
@@ -118,7 +123,15 @@ class MyAlarmSettings {
       ),
       extensionSettings: extensionSettings.copyWith(
         id: id,
+        action: action,
+        taskRepeat: taskRepeat,
+        difficulty: difficulty,
+        ringsDayOfWeek: ringsDayOfWeek,
       ),
     );
+  }
+
+  bool get isPeriodic {
+    return extensionSettings.isPeriodic();
   }
 }
