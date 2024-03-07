@@ -1,6 +1,5 @@
 import 'package:alarm/alarm.dart';
 import 'package:alarming/classes/alarm_extension_settings.dart';
-import 'package:alarming/classes/day_of_week.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
 
