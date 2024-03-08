@@ -80,6 +80,10 @@ class _AlarmActionBottomSheetState extends State<AlarmActionBottomSheet> {
                     value: AlarmAction.smile,
                     child: Text('Smile'),
                   ),
+                  DropdownMenuItem<AlarmAction>(
+                    value: AlarmAction.audio,
+                    child: Text('Audio'),
+                  ),
                 ],
                 onChanged: (value) => setState(() => _action = value!),
               ),
