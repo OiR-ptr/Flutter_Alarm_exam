@@ -1,3 +1,4 @@
+import 'package:alarming/classes/day_of_week.dart';
 import 'package:alarming/classes/math_questions.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
@@ -17,15 +18,19 @@ class MathRingScreen extends StatefulWidget {
   State<MathRingScreen> createState() => _MathRingScreenState();
 }
 
-class _MathRingScreenState extends State<MathRingScreen> with TickerProviderStateMixin {
+class _MathRingScreenState extends State<MathRingScreen>
+    with TickerProviderStateMixin {
   int taskIndex = 0;
   final TextEditingController _numberInput = TextEditingController();
   late final AnimationController _animation;
 
   @override
   void initState() {
-    _animation = AnimationController(vsync: this, duration: const Duration(minutes: 1));
-    _animation.addListener(() {setState(() {});});
+    _animation =
+        AnimationController(vsync: this, duration: const Duration(minutes: 1));
+    _animation.addListener(() {
+      setState(() {});
+    });
     _animation.repeat(reverse: true);
     super.initState();
   }
@@ -37,6 +42,21 @@ class _MathRingScreenState extends State<MathRingScreen> with TickerProviderStat
       if (taskIndex == widget.questions.length - 1) {
         // 全タスクが完了したらページ遷移する
         await MyAlarm.stop(widget.alarmSettings.id);
+        if (widget.alarmSettings.isPeriodic) {
+          // 定期アラームの場合は再仕掛け
+          await MyAlarm.set(
+            settings: widget.alarmSettings.copyWith(
+              dateTime: DayOfWeekExtension.getNextDayOfWeek(
+                DayOfWeekExtension.getNearWeekday(
+                  widget.alarmSettings.extensionSettings.ringsDayOfWeek,
+                  widget.alarmSettings.settings.dateTime,
+                ),
+                widget.alarmSettings.settings.dateTime,
+              ),
+            ),
+          );
+        }
+
         if (context.mounted) {
           Navigator.popUntil(context, (route) => route.isFirst);
         }
@@ -45,7 +65,9 @@ class _MathRingScreenState extends State<MathRingScreen> with TickerProviderStat
         setState(() {
           taskIndex = taskIndex + 1;
           _numberInput.clear();
-          _animation..reset()..repeat(reverse: true);
+          _animation
+            ..reset()
+            ..repeat(reverse: true);
         });
 
         // スヌーズアラームを一分延長
