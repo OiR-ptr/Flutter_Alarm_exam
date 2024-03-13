@@ -34,7 +34,7 @@ extension DayOfWeekExtension on DayOfWeek {
   }
 
   /// 次の曜日になるまで何日かかるかを取得します
-  /// 
+  ///
   /// basisAtを省略した場合、現在日付を基準に検索します
   static Duration getHowManyDays(DayOfWeek next, [DateTime? basisAt]) {
     basisAt ??= DateTime.now();
@@ -44,17 +44,21 @@ extension DayOfWeekExtension on DayOfWeek {
   }
 
   /// 候補の中から最も近い曜日を取得します
-  /// 
+  ///
   /// basisAtを省略した場合、現在日付を基準に検索します
-  static DayOfWeek getNearWeekday(Iterable<DayOfWeek> candidates, [DateTime? basisAt]) {
+  static DayOfWeek getNearWeekday(Iterable<DayOfWeek> candidates,
+      [DateTime? basisAt]) {
     basisAt ??= DateTime.now();
 
-    // TODO: 指定日から最も近い曜日を返す
-    return DayOfWeek.friday;
+    final nearest = candidates
+        .map((dow) => basisAt!.add(getHowManyDays(dow, basisAt)))
+        .reduce((value, dt) => value.isBefore(dt) ? value : dt);
+
+    return DayOfWeekExtension.fromValue(nearest.weekday);
   }
 
   /// 指定された曜日になる直近の日付を取得します
-  /// 
+  ///
   /// basisAtを省略した場合、現在日付を基準に検索します
   static DateTime getNextDayOfWeek(DayOfWeek next, [DateTime? basisAt]) {
     basisAt ??= DateTime.now();
