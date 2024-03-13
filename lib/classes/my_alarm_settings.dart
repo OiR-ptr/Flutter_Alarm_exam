@@ -146,6 +146,7 @@ class MyAlarmSettings {
     int? taskRepeat,
     Difficulty? difficulty,
     Iterable<DayOfWeek>? ringsDayOfWeek,
+    Duration? alarmAt,
   }) {
     return MyAlarmSettings(
       id: id ?? this.id,
@@ -168,11 +169,17 @@ class MyAlarmSettings {
         taskRepeat: taskRepeat,
         difficulty: difficulty,
         ringsDayOfWeek: ringsDayOfWeek,
+        alarmAt: alarmAt,
       ),
     );
   }
 
   bool get isPeriodic {
     return extensionSettings.isPeriodic();
+  }
+
+  bool get isSnooze {
+    // TODO: スヌーズになっているかどうか
+    return isPeriodic;
   }
 }

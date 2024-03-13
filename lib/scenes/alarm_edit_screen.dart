@@ -80,6 +80,8 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
           draftTime = draftTime.add(const Duration(days: 1));
         }
 
+        // TODO: 時間指定が変更された場合、今後の定期アラーム予定も変更されないとおかしい
+        // TODO: スヌーズが仕掛けられている場合、そもそも時間をいじれるのは変かも
         drafting = drafting.copyWith(dateTime: draftTime);
       });
     }

@@ -52,8 +52,7 @@ class AlarmTile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  // TODO: スヌーズ中の時だけアイコンを出す
-                  const Icon(Icons.snooze_sharp, size: 20),
+                  Icon(settings.isSnooze ? Icons.snooze_sharp : null, size: 20),
                   Text(nextAlarmAt),
                 ],
               ),
