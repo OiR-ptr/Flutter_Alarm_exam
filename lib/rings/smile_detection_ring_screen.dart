@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:alarming/classes/day_of_week.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:alarming/classes/smile_detections.dart';
 import 'package:camera/camera.dart';
@@ -164,20 +163,7 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen>
   Future gotoHome(BuildContext context) async {
     if (!context.mounted) return;
     await MyAlarm.stop(widget.alarmSettings.id);
-    if (widget.alarmSettings.isPeriodic) {
-      // 定期アラームの場合は再仕掛け
-      await MyAlarm.set(
-        settings: widget.alarmSettings.copyWith(
-          dateTime: DayOfWeekExtension.getNextDayOfWeek(
-            DayOfWeekExtension.getNearWeekday(
-              widget.alarmSettings.extensionSettings.ringsDayOfWeek,
-              widget.alarmSettings.settings.dateTime,
-            ),
-            widget.alarmSettings.settings.dateTime,
-          ),
-        ),
-      );
-    }
+    await MyAlarm.setPeriodic(settings: widget.alarmSettings);
 
     if (context.mounted) {
       Navigator.popUntil(context, (route) => route.isFirst);

@@ -45,6 +45,7 @@ class AlarmExtensionSettings {
   final int taskRepeat;
   final Difficulty difficulty;
   final Iterable<DayOfWeek> ringsDayOfWeek;
+  final Duration alarmAt;
 
   AlarmExtensionSettings({
     required this.id,
@@ -52,6 +53,7 @@ class AlarmExtensionSettings {
     required this.taskRepeat,
     required this.difficulty,
     required this.ringsDayOfWeek,
+    required this.alarmAt,
   });
 
   bool isPeriodic() {
@@ -64,6 +66,7 @@ class AlarmExtensionSettings {
     int? taskRepeat,
     Difficulty? difficulty,
     Iterable<DayOfWeek>? ringsDayOfWeek,
+    Duration? alarmAt,
   }) {
     return AlarmExtensionSettings(
       id: id ?? this.id,
@@ -71,6 +74,7 @@ class AlarmExtensionSettings {
       taskRepeat: taskRepeat ?? this.taskRepeat,
       difficulty: difficulty ?? this.difficulty,
       ringsDayOfWeek: ringsDayOfWeek ?? this.ringsDayOfWeek,
+      alarmAt: alarmAt ?? this.alarmAt,
     );
   }
 
@@ -89,6 +93,9 @@ class AlarmExtensionSettings {
           json["_rings_on_sat"] ? DayOfWeek.saturday : null,
           json["_rings_on_sun"] ? DayOfWeek.sunday : null,
         ].where((element) => element != null).map((e) => e!),
+        alarmAt: Duration(
+          minutes: json["_alarm_inminutes"] as int,
+        ),
       );
 
   Map<String, dynamic> toJson() {
@@ -104,6 +111,7 @@ class AlarmExtensionSettings {
       '_rings_on_fri': ringsDayOfWeek.contains(DayOfWeek.friday),
       '_rings_on_sat': ringsDayOfWeek.contains(DayOfWeek.saturday),
       '_rings_on_sun': ringsDayOfWeek.contains(DayOfWeek.sunday),
+      '_alarm_inminutes': alarmAt.inMinutes
     };
   }
 

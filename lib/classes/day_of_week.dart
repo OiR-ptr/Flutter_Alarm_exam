@@ -33,21 +33,30 @@ extension DayOfWeekExtension on DayOfWeek {
         orElse: () => throw ArgumentError('Invalid day value'));
   }
 
-  static Duration getHowManyDays(DayOfWeek next, DateTime? basisAt) {
+  /// 次の曜日になるまで何日かかるかを取得します
+  /// 
+  /// basisAtを省略した場合、現在日付を基準に検索します
+  static Duration getHowManyDays(DayOfWeek next, [DateTime? basisAt]) {
     basisAt ??= DateTime.now();
     return basisAt.weekday < next.value
         ? Duration(days: next.value - basisAt.weekday)
         : Duration(days: 7 + next.value - basisAt.weekday);
   }
 
-  static DayOfWeek getNearWeekday(Iterable<DayOfWeek> candidates, DateTime? basisAt) {
+  /// 候補の中から最も近い曜日を取得します
+  /// 
+  /// basisAtを省略した場合、現在日付を基準に検索します
+  static DayOfWeek getNearWeekday(Iterable<DayOfWeek> candidates, [DateTime? basisAt]) {
     basisAt ??= DateTime.now();
 
     // TODO: 指定日から最も近い曜日を返す
     return DayOfWeek.friday;
   }
 
-  static DateTime getNextDayOfWeek(DayOfWeek next, DateTime? basisAt) {
+  /// 指定された曜日になる直近の日付を取得します
+  /// 
+  /// basisAtを省略した場合、現在日付を基準に検索します
+  static DateTime getNextDayOfWeek(DayOfWeek next, [DateTime? basisAt]) {
     basisAt ??= DateTime.now();
 
     return DateTime(

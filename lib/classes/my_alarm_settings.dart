@@ -55,6 +55,26 @@ class MyAlarm {
     return false;
   }
 
+  static Future setPeriodic({required MyAlarmSettings settings}) async {
+    if (!settings.isPeriodic) {
+      // 定期アラームでなければ終了
+      return;
+    }
+
+    // 定期アラーム再仕掛け
+    await MyAlarm.set(
+      settings: settings.copyWith(
+        dateTime: DayOfWeekExtension.getNextDayOfWeek(
+          DayOfWeekExtension.getNearWeekday(
+            settings.extensionSettings.ringsDayOfWeek,
+          ),
+        ).add(
+          settings.extensionSettings.alarmAt,
+        ),
+      ),
+    );
+  }
+
   static Future<void> checkAndroidNotificationPermission() async {
     final status = await Permission.notification.status;
     if (status.isDenied) {

@@ -26,12 +26,13 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
     creating = widget.alarmSettings == null;
 
     if (creating) {
+      final now = DateTime.now();
       final id = DateTime.now().millisecondsSinceEpoch % 10000;
       drafting = MyAlarmSettings(
         id: id,
         settings: AlarmSettings(
           id: id,
-          dateTime: DateTime.now()
+          dateTime: now
               .add(const Duration(minutes: 1))
               .copyWith(second: 0, millisecond: 0),
           volume: 0.5,
@@ -47,6 +48,10 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
           taskRepeat: 1,
           difficulty: Difficulty.normal,
           ringsDayOfWeek: [],
+          alarmAt: Duration(
+            hours: now.hour,
+            minutes: now.minute + 1,
+          ),
         ),
       );
     } else {

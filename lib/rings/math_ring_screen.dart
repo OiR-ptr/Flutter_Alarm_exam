@@ -1,4 +1,3 @@
-import 'package:alarming/classes/day_of_week.dart';
 import 'package:alarming/classes/math_questions.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
@@ -42,20 +41,7 @@ class _MathRingScreenState extends State<MathRingScreen>
       if (taskIndex == widget.questions.length - 1) {
         // 全タスクが完了したらページ遷移する
         await MyAlarm.stop(widget.alarmSettings.id);
-        if (widget.alarmSettings.isPeriodic) {
-          // 定期アラームの場合は再仕掛け
-          await MyAlarm.set(
-            settings: widget.alarmSettings.copyWith(
-              dateTime: DayOfWeekExtension.getNextDayOfWeek(
-                DayOfWeekExtension.getNearWeekday(
-                  widget.alarmSettings.extensionSettings.ringsDayOfWeek,
-                  widget.alarmSettings.settings.dateTime,
-                ),
-                widget.alarmSettings.settings.dateTime,
-              ),
-            ),
-          );
-        }
+        await MyAlarm.setPeriodic(settings: widget.alarmSettings);
 
         if (context.mounted) {
           Navigator.popUntil(context, (route) => route.isFirst);
