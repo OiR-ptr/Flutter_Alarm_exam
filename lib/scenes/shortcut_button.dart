@@ -18,11 +18,10 @@ class _AlarmShortcutButtonState extends State<AlarmShortcutButton> {
 
   Future<void> onPressButton(int delayInHours) async {
     DateTime dateTime = DateTime.now().add(Duration(hours: delayInHours));
-    double? volume;
+    double volume = 0.5;
 
     if (delayInHours != 0) {
       dateTime = dateTime.copyWith(second: 0, millisecond: 0);
-      volume = 0.5;
     }
 
     setState(() => showMenu = false);
