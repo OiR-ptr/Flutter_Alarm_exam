@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AlarmTile extends StatelessWidget {
+  final String nextDay;
   final String title;
   final void Function() onPressed;
   final void Function()? onDismissed;
@@ -8,6 +9,7 @@ class AlarmTile extends StatelessWidget {
   const AlarmTile({
     Key? key,
     required this.title,
+    required this.nextDay,
     required this.onPressed,
     this.onDismissed,
   }) : super(key: key);
@@ -33,19 +35,38 @@ class AlarmTile extends StatelessWidget {
       child: RawMaterialButton(
         onPressed: onPressed,
         child: Container(
-          height: 100,
-          padding: const EdgeInsets.all(35),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          padding: const EdgeInsets.all(12),
+          child: Column(
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w500,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // TODO: スヌーズ中の時だけアイコンを出す
+                  const Icon(Icons.snooze_sharp, size: 20),
+                  Text(nextDay),
+                ],
               ),
-              const Icon(Icons.keyboard_arrow_right_rounded, size: 35),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Icon(Icons.keyboard_arrow_right_rounded, size: 35),
+                ],
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // TODO: 繰り返し設定やアクション定義を把握できるようにする
+                  Text("ミッション: 🔢"),
+                  Text("月火水木金土日"),
+                ],
+              ),
             ],
           ),
         ),

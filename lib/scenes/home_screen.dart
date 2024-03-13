@@ -7,6 +7,7 @@ import 'package:alarming/rings/ring_screen_home.dart';
 import 'package:alarming/scenes/shortcut_button.dart';
 import 'package:alarming/widgets/alarm_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AlarmHomeScreen extends StatefulWidget {
   const AlarmHomeScreen({Key? key}) : super(key: key);
@@ -59,21 +60,6 @@ class _AlarmHomeScreenState extends State<AlarmHomeScreen> {
       ),
     );
     loadAlarms();
-
-    // final res = await showModalBottomSheet<bool?>(
-    //     context: context,
-    //     isScrollControlled: true,
-    //     shape: RoundedRectangleBorder(
-    //       borderRadius: BorderRadius.circular(10.0),
-    //     ),
-    //     builder: (context) {
-    //       return FractionallySizedBox(
-    //         heightFactor: 0.75,
-    //         child: AlarmEditScreen(alarmSettings: settings),
-    //       );
-    //     });
-
-    // if (res != null && res == true) loadAlarms();
   }
 
   @override
@@ -98,6 +84,7 @@ class _AlarmHomeScreenState extends State<AlarmHomeScreen> {
                       hour: alarms[index].settings.dateTime.hour,
                       minute: alarms[index].settings.dateTime.minute,
                     ).format(context),
+                    nextDay: DateFormat.Md().format(alarms[index].settings.dateTime),
                     onPressed: () => navigateToAlarmScreen(alarms[index]),
                     onDismissed: () {
                       MyAlarm.stop(alarms[index].id).then((_) => loadAlarms());

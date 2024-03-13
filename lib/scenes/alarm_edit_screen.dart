@@ -284,8 +284,9 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
   Widget _getPeriodicDefined() {
     String text;
     if (drafting.isPeriodic) {
-      text =
-          drafting.extensionSettings.ringsDayOfWeek.map((e) => e.name.substring(0,3)).join(',');
+      text = drafting.extensionSettings.ringsDayOfWeek
+          .map((e) => e.name.substring(0, 3).toUpperCase())
+          .join(',');
     } else {
       text = "繰り返しなし";
     }
