@@ -12,46 +12,33 @@ class RingScreenHome extends StatelessWidget {
       : super(key: key);
 
   void snoozeAlarm(BuildContext context, Duration snoozeAfter) {
-    final now = DateTime.now();
-    MyAlarm.set(
-      settings: alarmSettings.copyWith(
-        dateTime: DateTime(
-          now.year,
-          now.month,
-          now.day,
-          now.hour,
-          now.minute,
-          now.second,
-          0,
-        ).add(snoozeAfter),
-      ),
+    MyAlarm.snooze(
+      settings: alarmSettings,
+      duration: snoozeAfter,
     ).then((_) => Navigator.pop(context));
   }
 
   Future<void> gotoStopActionPage(BuildContext context) async {
-    final now = DateTime.now();
-    MyAlarm.set(
-      settings: alarmSettings.copyWith(
-        dateTime: DateTime(
-          now.year,
-          now.month,
-          now.day,
-          now.hour,
-          now.minute,
-          0,
-          0,
-        ).add(const Duration(minutes: 1)),
-      ),
+    MyAlarm.snooze(
+      settings: alarmSettings,
+      duration: const Duration(minutes: 1),
     ).then((_) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) {
             // アクション設定に従って分岐
-            switch(alarmSettings.extensionSettings.action) {
-              case AlarmAction.math:  return MathRingScreen(alarmSettings: alarmSettings,);
-              case AlarmAction.smile: return SmileDetectionRingScreen(alarmSettings: alarmSettings,);
-              case AlarmAction.audio: return const SimpleRecorder();
+            switch (alarmSettings.extensionSettings.action) {
+              case AlarmAction.math:
+                return MathRingScreen(
+                  alarmSettings: alarmSettings,
+                );
+              case AlarmAction.smile:
+                return SmileDetectionRingScreen(
+                  alarmSettings: alarmSettings,
+                );
+              case AlarmAction.audio:
+                return const SimpleRecorder();
             }
           },
         ),

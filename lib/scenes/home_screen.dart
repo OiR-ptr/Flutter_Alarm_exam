@@ -7,7 +7,6 @@ import 'package:alarming/rings/ring_screen_home.dart';
 import 'package:alarming/scenes/shortcut_button.dart';
 import 'package:alarming/widgets/alarm_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class AlarmHomeScreen extends StatefulWidget {
   const AlarmHomeScreen({Key? key}) : super(key: key);
@@ -80,11 +79,7 @@ class _AlarmHomeScreenState extends State<AlarmHomeScreen> {
                 itemBuilder: (context, index) {
                   return AlarmTile(
                     key: Key(alarms[index].settings.id.toString()),
-                    title: TimeOfDay(
-                      hour: alarms[index].settings.dateTime.hour,
-                      minute: alarms[index].settings.dateTime.minute,
-                    ).format(context),
-                    nextDay: DateFormat.Md().format(alarms[index].settings.dateTime),
+                    settings: alarms[index],
                     onPressed: () => navigateToAlarmScreen(alarms[index]),
                     onDismissed: () {
                       MyAlarm.stop(alarms[index].id).then((_) => loadAlarms());

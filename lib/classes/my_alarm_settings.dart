@@ -55,6 +55,27 @@ class MyAlarm {
     return false;
   }
 
+  static Future<bool> snooze({
+    required MyAlarmSettings settings,
+    required Duration duration,
+  }) async {
+    final now = DateTime.now();
+
+    return await MyAlarm.set(
+      settings: settings.copyWith(
+        dateTime: DateTime(
+          now.year,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          0,
+        ).add(duration),
+      ),
+    );
+  }
+
   static Future setPeriodic({required MyAlarmSettings settings}) async {
     if (!settings.isPeriodic) {
       // 定期アラームでなければ終了
