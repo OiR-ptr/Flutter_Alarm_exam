@@ -69,6 +69,7 @@ class AlarmTile extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  Text(settings.extensionSettings.label),
                   const Icon(Icons.keyboard_arrow_right_rounded, size: 35),
                 ],
               ),

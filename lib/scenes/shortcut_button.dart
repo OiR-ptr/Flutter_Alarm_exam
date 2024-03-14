@@ -52,6 +52,7 @@ class _AlarmShortcutButtonState extends State<AlarmShortcutButton> {
             minutes: dateTime.minute,
           ),
           isSnooze: false,
+          label: "RING NOW",
         ),
       ),
     );
