@@ -47,6 +47,7 @@ class AlarmExtensionSettings {
   final Iterable<DayOfWeek> ringsDayOfWeek;
   final Duration alarmAt;
   final bool isSnooze;
+  final String label;
 
   AlarmExtensionSettings({
     required this.id,
@@ -56,6 +57,7 @@ class AlarmExtensionSettings {
     required this.ringsDayOfWeek,
     required this.alarmAt,
     required this.isSnooze,
+    required this.label,
   });
 
   bool isPeriodic() {
@@ -70,6 +72,7 @@ class AlarmExtensionSettings {
     Iterable<DayOfWeek>? ringsDayOfWeek,
     Duration? alarmAt,
     bool? isSnooze,
+    String? label,
   }) {
     return AlarmExtensionSettings(
       id: id ?? this.id,
@@ -79,6 +82,7 @@ class AlarmExtensionSettings {
       ringsDayOfWeek: ringsDayOfWeek ?? this.ringsDayOfWeek,
       alarmAt: alarmAt ?? this.alarmAt,
       isSnooze: isSnooze ?? this.isSnooze,
+      label: label ?? this.label,
     );
   }
 
@@ -101,6 +105,7 @@ class AlarmExtensionSettings {
           minutes: json["_alarm_inminutes"] as int,
         ),
         isSnooze: json["isSnooze"] as bool,
+        label: json["label"],
       );
 
   Map<String, dynamic> toJson() {
@@ -118,6 +123,7 @@ class AlarmExtensionSettings {
       '_rings_on_sun': ringsDayOfWeek.contains(DayOfWeek.sunday),
       '_alarm_inminutes': alarmAt.inMinutes,
       'isSnooze': isSnooze,
+      'label': label,
     };
   }
 
