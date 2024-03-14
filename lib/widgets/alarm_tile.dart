@@ -1,3 +1,4 @@
+import 'package:alarming/classes/alarm_extension_settings.dart';
 import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -54,6 +55,8 @@ class AlarmTile extends StatelessWidget {
                 children: [
                   alarmIcon,
                   Text(nextAlarmAt),
+                  const Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0)),
+                  periodicDefinedText,
                 ],
               ),
               Row(
@@ -69,12 +72,11 @@ class AlarmTile extends StatelessWidget {
                   const Icon(Icons.keyboard_arrow_right_rounded, size: 35),
                 ],
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  // TODO: 繰り返し設定やアクション定義を把握できるようにする
-                  Text("ミッション: 🔢"),
-                  Text("月火水木金土日"),
+                  const Text("Action: "),
+                  actionIcon,
                 ],
               ),
             ],
@@ -93,5 +95,37 @@ class AlarmTile extends StatelessWidget {
               : Icons.bolt_sharp,
       size: 20,
     );
+  }
+
+  Widget get actionIcon {
+    late IconData icon;
+    switch (settings.extensionSettings.action) {
+      case AlarmAction.math:
+        icon = Icons.add_sharp;
+      case AlarmAction.smile:
+        icon = Icons.sentiment_very_satisfied_sharp;
+      case AlarmAction.audio:
+        icon = Icons.mic_sharp;
+    }
+
+    return Icon(
+      icon,
+      size: 20,
+    );
+  }
+
+  Widget get periodicDefinedText {
+    late String text;
+    if (settings.isPeriodic) {
+      text = settings.extensionSettings.ringsDayOfWeek
+          .map(
+            (e) => e.name.substring(0, 3).toUpperCase(),
+          )
+          .join(',');
+    } else {
+      text = "繰り返しなし";
+    }
+
+    return Text(text);
   }
 }
