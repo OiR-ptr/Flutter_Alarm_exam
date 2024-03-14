@@ -53,14 +53,14 @@ typedef _Fn = void Function();
 const theSource = AudioSource.microphone;
 
 /// Example app.
-class SimpleRecorder extends StatefulWidget {
-  const SimpleRecorder({super.key});
+class SimpleRecorderRingScreen extends StatefulWidget {
+  const SimpleRecorderRingScreen({super.key});
 
   @override
-  State<SimpleRecorder> createState() => _SimpleRecorderState();
+  State<SimpleRecorderRingScreen> createState() => _SimpleRecorderRingScreenState();
 }
 
-class _SimpleRecorderState extends State<SimpleRecorder> {
+class _SimpleRecorderRingScreenState extends State<SimpleRecorderRingScreen> {
   Codec _codec = Codec.aacMP4;
   String _mPath = 'tau_file.mp4';
   FlutterSoundPlayer? _mPlayer = FlutterSoundPlayer();
