@@ -19,6 +19,7 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
 
   late bool creating;
   late MyAlarmSettings drafting;
+  final _alarmLabelController = TextEditingController();
 
   @override
   void initState() {
@@ -58,7 +59,14 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
       );
     } else {
       drafting = widget.alarmSettings!;
+      _alarmLabelController.text = drafting.extensionSettings.label;
     }
+  }
+
+  @override
+  void dispose() {
+    _alarmLabelController.dispose();
+    super.dispose();
   }
 
   Future<void> pickTime() async {
@@ -181,6 +189,23 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
                         .copyWith(color: Colors.blueAccent),
                   ),
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("ラベル"),
+                  const Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0)),
+                  Expanded(
+                    child: TextField(
+                      controller: _alarmLabelController,
+                      onChanged: (value) => setState(() {
+                        drafting = drafting.copyWith(
+                          label: value,
+                        );
+                      }),
+                    ),
+                  ),
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
