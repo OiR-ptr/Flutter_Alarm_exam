@@ -110,6 +110,16 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
     });
   }
 
+  void skipAlarm() {
+    MyAlarm.stop(widget.alarmSettings!.id).then((isOk) {
+      if (isOk) {
+        MyAlarm.setPeriodic(settings: widget.alarmSettings!).then((any) {
+          Navigator.pop(context, true);
+        });
+      }
+    });
+  }
+
   Future popPeriodicBottomSheet(BuildContext context) async {
     final AlarmPeriodicBottomSheetDone? done = await showModalBottomSheet(
       context: context,
@@ -255,17 +265,7 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
                   ),
                 ],
               ),
-              if (!creating)
-                TextButton(
-                  onPressed: deleteAlarm,
-                  child: Text(
-                    'Delete Alarm',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(color: Colors.red),
-                  ),
-                ),
+              _cancelAction(context),
               TextButton(
                 onPressed: () => saveAlarm(),
                 child: const Row(
@@ -298,5 +298,33 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
       text = "繰り返しなし";
     }
     return Text(text);
+  }
+
+  Widget _cancelAction(BuildContext context) {
+    if (creating) return Container();
+
+    if (drafting.isSnoozed) {
+      return TextButton(
+        onPressed: skipAlarm,
+        child: Text(
+          'Finish Snnoze',
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(color: Colors.red),
+        ),
+      );
+    }
+
+    return TextButton(
+      onPressed: deleteAlarm,
+      child: Text(
+        'Delete Alarm',
+        style: Theme.of(context)
+            .textTheme
+            .titleMedium!
+            .copyWith(color: Colors.red),
+      ),
+    );
   }
 }
