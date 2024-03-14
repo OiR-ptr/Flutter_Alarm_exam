@@ -51,6 +51,7 @@ class _AlarmShortcutButtonState extends State<AlarmShortcutButton> {
             hours: dateTime.hour,
             minutes: dateTime.minute,
           ),
+          isSnooze: false,
         ),
       ),
     );

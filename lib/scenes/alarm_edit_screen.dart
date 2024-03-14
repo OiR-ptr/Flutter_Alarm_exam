@@ -52,6 +52,7 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
             hours: now.hour,
             minutes: now.minute + 1,
           ),
+          isSnooze: false,
         ),
       );
     } else {

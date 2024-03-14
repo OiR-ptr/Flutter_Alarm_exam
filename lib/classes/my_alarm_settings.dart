@@ -72,6 +72,7 @@ class MyAlarm {
           now.second,
           0,
         ).add(duration),
+        isSnooze: true,
       ),
     );
   }
@@ -92,6 +93,7 @@ class MyAlarm {
         ).add(
           settings.extensionSettings.alarmAt,
         ),
+        isSnooze: false,
       ),
     );
   }
@@ -147,6 +149,7 @@ class MyAlarmSettings {
     Difficulty? difficulty,
     Iterable<DayOfWeek>? ringsDayOfWeek,
     Duration? alarmAt,
+    bool? isSnooze,
   }) {
     return MyAlarmSettings(
       id: id ?? this.id,
@@ -170,6 +173,7 @@ class MyAlarmSettings {
         difficulty: difficulty,
         ringsDayOfWeek: ringsDayOfWeek,
         alarmAt: alarmAt,
+        isSnooze: isSnooze,
       ),
     );
   }
@@ -178,8 +182,7 @@ class MyAlarmSettings {
     return extensionSettings.isPeriodic();
   }
 
-  bool get isSnooze {
-    // TODO: スヌーズになっているかどうか
-    return isPeriodic;
+  bool get isSnoozed {
+    return extensionSettings.isSnooze;
   }
 }

@@ -52,7 +52,7 @@ class AlarmTile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(settings.isSnooze ? Icons.snooze_sharp : null, size: 20),
+                  Icon(settings.isSnoozed ? Icons.snooze_sharp : null, size: 20),
                   Text(nextAlarmAt),
                 ],
               ),
