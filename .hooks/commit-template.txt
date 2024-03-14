@@ -10,3 +10,4 @@
 # :recycle: refactor: リファクタリング
 # :green_heart: test: テストコードの追加や修正
 # :gear: chore: ビルドツールの導入や依存関係を更新など
+# :construction: wontfix: 仮実装やTODOなど
