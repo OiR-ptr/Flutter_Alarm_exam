@@ -81,9 +81,13 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
           draftTime = draftTime.add(const Duration(days: 1));
         }
 
-        // TODO: 時間指定が変更された場合、今後の定期アラーム予定も変更されないとおかしい
-        // TODO: スヌーズが仕掛けられている場合、そもそも時間をいじれるのは変かも
-        drafting = drafting.copyWith(dateTime: draftTime);
+        drafting = drafting.copyWith(
+          dateTime: draftTime,
+          alarmAt: Duration(
+            hours: draftTime.hour,
+            minutes: draftTime.minute,
+          ),
+        );
       });
     }
   }
@@ -153,7 +157,7 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               RawMaterialButton(
-                onPressed: pickTime,
+                onPressed: drafting.isSnoozed ? null : pickTime,
                 fillColor: Colors.grey[200],
                 child: Container(
                   margin: const EdgeInsets.all(20),
