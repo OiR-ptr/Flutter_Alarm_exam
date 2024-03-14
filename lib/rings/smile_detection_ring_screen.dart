@@ -132,21 +132,10 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen>
 
   Future doneTask() async {
     // アクション中のスヌーズアラームを一分延長
-    final now = DateTime.now();
-    await MyAlarm.set(
-        settings: widget.alarmSettings.copyWith(
-      dateTime: DateTime(
-        now.year,
-        now.month,
-        now.day,
-        now.hour,
-        now.minute,
-        now.second,
-        0,
-      ).add(
-        const Duration(minutes: 1),
-      ),
-    ));
+    await MyAlarm.snooze(
+      settings: widget.alarmSettings,
+      duration: const Duration(minutes: 1),
+    );
 
     setState(() {
       _taskIndex = _taskIndex + 1;
@@ -162,6 +151,7 @@ class _SmileDetectionRingScreenState extends State<SmileDetectionRingScreen>
   Future gotoHome(BuildContext context) async {
     if (!context.mounted) return;
     await MyAlarm.stop(widget.alarmSettings.id);
+    await MyAlarm.setPeriodic(settings: widget.alarmSettings);
 
     if (context.mounted) {
       Navigator.popUntil(context, (route) => route.isFirst);

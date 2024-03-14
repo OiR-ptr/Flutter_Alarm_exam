@@ -1,16 +1,29 @@
+import 'package:alarming/classes/my_alarm_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AlarmTile extends StatelessWidget {
-  final String title;
+  final MyAlarmSettings settings;
   final void Function() onPressed;
   final void Function()? onDismissed;
 
   const AlarmTile({
     Key? key,
-    required this.title,
+    required this.settings,
     required this.onPressed,
     this.onDismissed,
   }) : super(key: key);
+
+  TimeOfDay get settingTimeOfDay {
+    return TimeOfDay(
+      hour: settings.settings.dateTime.hour,
+      minute: settings.settings.dateTime.minute,
+    );
+  }
+
+  String get nextAlarmAt {
+    return DateFormat.Md().format(settings.settings.dateTime);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,23 +46,52 @@ class AlarmTile extends StatelessWidget {
       child: RawMaterialButton(
         onPressed: onPressed,
         child: Container(
-          height: 100,
-          padding: const EdgeInsets.all(35),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          padding: const EdgeInsets.all(12),
+          child: Column(
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w500,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  alarmIcon,
+                  Text(nextAlarmAt),
+                ],
               ),
-              const Icon(Icons.keyboard_arrow_right_rounded, size: 35),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    settingTimeOfDay.format(context),
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Icon(Icons.keyboard_arrow_right_rounded, size: 35),
+                ],
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // TODO: 繰り返し設定やアクション定義を把握できるようにする
+                  Text("ミッション: 🔢"),
+                  Text("月火水木金土日"),
+                ],
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget get alarmIcon {
+    return Icon(
+      settings.isSnoozed
+          ? Icons.snooze_sharp
+          : settings.isPeriodic
+              ? Icons.loop_sharp
+              : Icons.bolt_sharp,
+      size: 20,
     );
   }
 }

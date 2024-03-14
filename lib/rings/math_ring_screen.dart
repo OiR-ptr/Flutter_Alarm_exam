@@ -17,15 +17,19 @@ class MathRingScreen extends StatefulWidget {
   State<MathRingScreen> createState() => _MathRingScreenState();
 }
 
-class _MathRingScreenState extends State<MathRingScreen> with TickerProviderStateMixin {
+class _MathRingScreenState extends State<MathRingScreen>
+    with TickerProviderStateMixin {
   int taskIndex = 0;
   final TextEditingController _numberInput = TextEditingController();
   late final AnimationController _animation;
 
   @override
   void initState() {
-    _animation = AnimationController(vsync: this, duration: const Duration(minutes: 1));
-    _animation.addListener(() {setState(() {});});
+    _animation =
+        AnimationController(vsync: this, duration: const Duration(minutes: 1));
+    _animation.addListener(() {
+      setState(() {});
+    });
     _animation.repeat(reverse: true);
     super.initState();
   }
@@ -37,6 +41,8 @@ class _MathRingScreenState extends State<MathRingScreen> with TickerProviderStat
       if (taskIndex == widget.questions.length - 1) {
         // 全タスクが完了したらページ遷移する
         await MyAlarm.stop(widget.alarmSettings.id);
+        await MyAlarm.setPeriodic(settings: widget.alarmSettings);
+
         if (context.mounted) {
           Navigator.popUntil(context, (route) => route.isFirst);
         }
@@ -45,25 +51,15 @@ class _MathRingScreenState extends State<MathRingScreen> with TickerProviderStat
         setState(() {
           taskIndex = taskIndex + 1;
           _numberInput.clear();
-          _animation..reset()..repeat(reverse: true);
+          _animation
+            ..reset()
+            ..repeat(reverse: true);
         });
 
         // スヌーズアラームを一分延長
-        final now = DateTime.now();
-        await MyAlarm.set(
-          settings: widget.alarmSettings.copyWith(
-            dateTime: DateTime(
-              now.year,
-              now.month,
-              now.day,
-              now.hour,
-              now.minute,
-              now.second,
-              0,
-            ).add(
-              const Duration(minutes: 1),
-            ),
-          ),
+        await MyAlarm.snooze(
+          settings: widget.alarmSettings,
+          duration: const Duration(minutes: 1),
         );
       }
     }

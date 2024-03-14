@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:alarm/alarm.dart';
 import 'package:alarming/classes/alarm_extension_settings.dart';
+import 'package:alarming/classes/day_of_week.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MyAlarm {
@@ -54,6 +55,49 @@ class MyAlarm {
     return false;
   }
 
+  static Future<bool> snooze({
+    required MyAlarmSettings settings,
+    required Duration duration,
+  }) async {
+    final now = DateTime.now();
+
+    return await MyAlarm.set(
+      settings: settings.copyWith(
+        dateTime: DateTime(
+          now.year,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+          0,
+        ).add(duration),
+        isSnooze: true,
+      ),
+    );
+  }
+
+  static Future setPeriodic({required MyAlarmSettings settings}) async {
+    if (!settings.isPeriodic) {
+      // 定期アラームでなければ終了
+      return;
+    }
+
+    // 定期アラーム再仕掛け
+    await MyAlarm.set(
+      settings: settings.copyWith(
+        dateTime: DayOfWeekExtension.getNextDayOfWeek(
+          DayOfWeekExtension.getNearWeekday(
+            settings.extensionSettings.ringsDayOfWeek,
+          ),
+        ).add(
+          settings.extensionSettings.alarmAt,
+        ),
+        isSnooze: false,
+      ),
+    );
+  }
+
   static Future<void> checkAndroidNotificationPermission() async {
     final status = await Permission.notification.status;
     if (status.isDenied) {
@@ -100,6 +144,12 @@ class MyAlarmSettings {
     String? notificationBody,
     bool? enableNotificationOnKill,
     bool? androidFullScreenIntent,
+    AlarmAction? action,
+    int? taskRepeat,
+    Difficulty? difficulty,
+    Iterable<DayOfWeek>? ringsDayOfWeek,
+    Duration? alarmAt,
+    bool? isSnooze,
   }) {
     return MyAlarmSettings(
       id: id ?? this.id,
@@ -118,7 +168,21 @@ class MyAlarmSettings {
       ),
       extensionSettings: extensionSettings.copyWith(
         id: id,
+        action: action,
+        taskRepeat: taskRepeat,
+        difficulty: difficulty,
+        ringsDayOfWeek: ringsDayOfWeek,
+        alarmAt: alarmAt,
+        isSnooze: isSnooze,
       ),
     );
+  }
+
+  bool get isPeriodic {
+    return extensionSettings.isPeriodic();
+  }
+
+  bool get isSnoozed {
+    return extensionSettings.isSnooze;
   }
 }

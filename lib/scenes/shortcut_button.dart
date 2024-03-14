@@ -10,21 +10,18 @@ class AlarmShortcutButton extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<AlarmShortcutButton> createState() =>
-      _AlarmShortcutButtonState();
+  State<AlarmShortcutButton> createState() => _AlarmShortcutButtonState();
 }
 
-class _AlarmShortcutButtonState
-    extends State<AlarmShortcutButton> {
+class _AlarmShortcutButtonState extends State<AlarmShortcutButton> {
   bool showMenu = false;
 
   Future<void> onPressButton(int delayInHours) async {
     DateTime dateTime = DateTime.now().add(Duration(hours: delayInHours));
-    double? volume;
+    double volume = 0.5;
 
     if (delayInHours != 0) {
       dateTime = dateTime.copyWith(second: 0, millisecond: 0);
-      volume = 0.5;
     }
 
     setState(() => showMenu = false);
@@ -49,6 +46,12 @@ class _AlarmShortcutButtonState
           action: AlarmAction.math,
           taskRepeat: 1,
           difficulty: Difficulty.normal,
+          ringsDayOfWeek: [],
+          alarmAt: Duration(
+            hours: dateTime.hour,
+            minutes: dateTime.minute,
+          ),
+          isSnooze: false,
         ),
       ),
     );

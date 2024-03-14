@@ -44,27 +44,21 @@ class _AlarmHomeScreenState extends State<AlarmHomeScreen> {
     await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              RingScreenHome(alarmSettings: alarmSettings),
+          builder: (context) => RingScreenHome(alarmSettings: alarmSettings),
         ));
     loadAlarms();
   }
 
   Future<void> navigateToAlarmScreen(MyAlarmSettings? settings) async {
-    final res = await showModalBottomSheet<bool?>(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AlarmEditScreen(
+          alarmSettings: settings,
         ),
-        builder: (context) {
-          return FractionallySizedBox(
-            heightFactor: 0.75,
-            child: AlarmEditScreen(alarmSettings: settings),
-          );
-        });
-
-    if (res != null && res == true) loadAlarms();
+      ),
+    );
+    loadAlarms();
   }
 
   @override
@@ -85,10 +79,7 @@ class _AlarmHomeScreenState extends State<AlarmHomeScreen> {
                 itemBuilder: (context, index) {
                   return AlarmTile(
                     key: Key(alarms[index].settings.id.toString()),
-                    title: TimeOfDay(
-                      hour: alarms[index].settings.dateTime.hour,
-                      minute: alarms[index].settings.dateTime.minute,
-                    ).format(context),
+                    settings: alarms[index],
                     onPressed: () => navigateToAlarmScreen(alarms[index]),
                     onDismissed: () {
                       MyAlarm.stop(alarms[index].id).then((_) => loadAlarms());
