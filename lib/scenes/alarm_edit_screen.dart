@@ -19,6 +19,7 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
 
   late bool creating;
   late MyAlarmSettings drafting;
+  final _alarmLabelController = TextEditingController();
 
   @override
   void initState() {
@@ -53,11 +54,19 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
             minutes: now.minute + 1,
           ),
           isSnooze: false,
+          label: "",
         ),
       );
     } else {
       drafting = widget.alarmSettings!;
+      _alarmLabelController.text = drafting.extensionSettings.label;
     }
+  }
+
+  @override
+  void dispose() {
+    _alarmLabelController.dispose();
+    super.dispose();
   }
 
   Future<void> pickTime() async {
@@ -107,6 +116,16 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
   void deleteAlarm() {
     MyAlarm.stop(widget.alarmSettings!.id).then((res) {
       if (res) Navigator.pop(context, true);
+    });
+  }
+
+  void skipAlarm() {
+    MyAlarm.stop(widget.alarmSettings!.id).then((isOk) {
+      if (isOk) {
+        MyAlarm.setPeriodic(settings: widget.alarmSettings!).then((any) {
+          Navigator.pop(context, true);
+        });
+      }
     });
   }
 
@@ -170,6 +189,23 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
                         .copyWith(color: Colors.blueAccent),
                   ),
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("ラベル"),
+                  const Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0)),
+                  Expanded(
+                    child: TextField(
+                      controller: _alarmLabelController,
+                      onChanged: (value) => setState(() {
+                        drafting = drafting.copyWith(
+                          label: value,
+                        );
+                      }),
+                    ),
+                  ),
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -255,17 +291,7 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
                   ),
                 ],
               ),
-              if (!creating)
-                TextButton(
-                  onPressed: deleteAlarm,
-                  child: Text(
-                    'Delete Alarm',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(color: Colors.red),
-                  ),
-                ),
+              _cancelAction(context),
               TextButton(
                 onPressed: () => saveAlarm(),
                 child: const Row(
@@ -298,5 +324,33 @@ class _AlarmEditScreenState extends State<AlarmEditScreen> {
       text = "繰り返しなし";
     }
     return Text(text);
+  }
+
+  Widget _cancelAction(BuildContext context) {
+    if (creating) return Container();
+
+    if (drafting.isSnoozed) {
+      return TextButton(
+        onPressed: skipAlarm,
+        child: Text(
+          'Finish Snnoze',
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(color: Colors.red),
+        ),
+      );
+    }
+
+    return TextButton(
+      onPressed: deleteAlarm,
+      child: Text(
+        'Delete Alarm',
+        style: Theme.of(context)
+            .textTheme
+            .titleMedium!
+            .copyWith(color: Colors.red),
+      ),
+    );
   }
 }

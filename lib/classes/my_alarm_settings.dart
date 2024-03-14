@@ -150,6 +150,7 @@ class MyAlarmSettings {
     Iterable<DayOfWeek>? ringsDayOfWeek,
     Duration? alarmAt,
     bool? isSnooze,
+    String? label,
   }) {
     return MyAlarmSettings(
       id: id ?? this.id,
@@ -174,6 +175,7 @@ class MyAlarmSettings {
         ringsDayOfWeek: ringsDayOfWeek,
         alarmAt: alarmAt,
         isSnooze: isSnooze,
+        label: label,
       ),
     );
   }
