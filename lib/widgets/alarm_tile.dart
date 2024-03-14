@@ -52,7 +52,7 @@ class AlarmTile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(settings.isSnoozed ? Icons.snooze_sharp : null, size: 20),
+                  alarmIcon,
                   Text(nextAlarmAt),
                 ],
               ),
@@ -81,6 +81,17 @@ class AlarmTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget get alarmIcon {
+    return Icon(
+      settings.isSnoozed
+          ? Icons.snooze_sharp
+          : settings.isPeriodic
+              ? Icons.loop_sharp
+              : Icons.bolt_sharp,
+      size: 20,
     );
   }
 }
