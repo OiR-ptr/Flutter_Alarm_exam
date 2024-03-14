@@ -116,7 +116,9 @@ class AlarmTile extends StatelessWidget {
 
   Widget get periodicDefinedText {
     late String text;
-    if (settings.isPeriodic) {
+    if (settings.isSnoozed) {
+      text = "スヌーズ中";
+    } else if (settings.isPeriodic) {
       text = settings.extensionSettings.ringsDayOfWeek
           .map(
             (e) => e.name.substring(0, 3).toUpperCase(),
