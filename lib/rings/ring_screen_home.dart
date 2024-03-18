@@ -38,7 +38,7 @@ class RingScreenHome extends StatelessWidget {
                   alarmSettings: alarmSettings,
                 );
               case AlarmAction.audio:
-                return const SimpleRecorderRingScreen();
+                return const RecordToStreamExample();
             }
           },
         ),
